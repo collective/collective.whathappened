@@ -3,6 +3,14 @@
     xmlns:browser="http://namespaces.zope.org/browser"
     i18n_domain="collective.whathappened">
 
+  <browser:page
+      name="collective_whathappened_all"
+      for="*"
+      template="collective_whathappened_all.pt"
+      permission="zope2.View"
+      />
+
+
   <!-- EXAMPLE:
   <browser:viewlet
       name="collective.someviewlet"

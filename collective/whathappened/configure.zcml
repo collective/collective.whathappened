@@ -9,6 +9,7 @@
     i18n_domain="collective.whathappened">
 
   <include package=".browser" />
+  <includeDependencies package="." />
 
   <i18n:registerTranslations directory="locales" />
 
@@ -25,6 +26,14 @@
       interface=".layer.Layer"
       name="collective.whathappened"
       />
+
+  <browser:page
+      for="*"
+      name="collective.whathappened.backend.sqlite"
+      class=".backend.SqliteBackend"
+      permission="zope.Public"
+      />
+
 
   <!-- EXAMPLE:
   <browser:viewlet
