@@ -34,6 +34,7 @@ setup(name='collective.whathappened',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'collective.history'
           # -*- Extra requirements: -*-
       ],
       extras_require=dict(
