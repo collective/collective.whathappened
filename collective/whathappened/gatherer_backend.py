@@ -1,5 +1,8 @@
 from zope import interface
 from zope import schema
+from zope import component
+
+from Products.Five.browser import BrowserView
 from Products.CMFCore.utils import getToolByName
 
 class IGathererBackend(interface.Interface):
@@ -8,7 +11,7 @@ class IGathererBackend(interface.Interface):
 
     id = schema.ASCIILine(title=u"id")
 
-    def getNewNotifications():
+    def getNewNotifications(lastCheck):
         """Get a list of new notifications since lastCheck.
         lastCheck is a datetime object."""
 
@@ -16,15 +19,17 @@ class IGathererBackend(interface.Interface):
         """Get the unique id of the gatherer"""
 
 
-class UserActionGathererBackend(object):
+class UserActionGathererBackend(BrowserView):
     """Create notifications from useraction (from collective.history)"""
+    interface.implements(IGathererBackend)
 
     id = "useraction"
 
-    def __init__(self):
-        pass
-#        self.mtool = getToolByName(self, 'portal_membership')
-#        self.user = getAuthenticatedMember().getId()
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+        self.mtool = getToolByName(self.context, 'portal_membership')
+        self.user = self.mtool.getAuthenticatedMember().getId()
 
     def getNewNotifications(self, lastCheck):
         return []

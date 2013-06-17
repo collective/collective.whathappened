@@ -1,10 +1,14 @@
 from zope import interface
 from zope import schema
 from zope import component
+from zope.publisher.interfaces.browser import IBrowserRequest
 
+from plone.app.customerize import registration
 from plone.registry.interfaces import IRegistry
 
 from collective.whathappened.gatherer_backend import IGathererBackend
+
+
 
 class IGathererManager(interface.Interface):
     """The gatherer manager provide a complete API to manage the creation of
@@ -23,12 +27,15 @@ class GathererManager(object):
         self.context = context
         self.request = request
         self.backends = []
-        utilities = component.getUtilitiesFor(IGathererBackend)
-        for utility in utilities:
-            name, backend = utility
-            self.backends.append(backend)
+
+    def update(self):
+        if not self.backends:
+            views = registration.getViews(IBrowserRequest)
+            self.backends = [ view.factory(self.context, self.request) for view in views
+                              if IGathererBackend.implementedBy(view.factory)]
 
     def getNewNotifications(self, lastCheck):
+        self.update()
         notifications = []
         for backend in self.backends:
             notifications.append(backend.getNewNotifications(lastCheck))

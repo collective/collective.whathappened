@@ -34,10 +34,11 @@
       permission="zope.Public"
       />
 
-  <utility
+  <browser:page
+      for="*"
       name="collective.whathappened.gatherer.useraction"
-      factory=".gatherer_backend.UserActionGathererBackend"
-      provides=".gatherer_backend.IGathererBackend"
+      class=".gatherer_backend.UserActionGathererBackend"
+      permission="zope.Public"
       />
 
 </configure>

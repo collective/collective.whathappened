@@ -10,7 +10,7 @@
 
     <div metal:fill-slot="main"
 	 tal:define="context_url string:${context/absolute_url};">
-      <h1>COLLECTIVE.WHATHAPPENED</h1>
+      <h1>Notifications</h1>
       <p>
 	<strong tal:content="view/notificationsCount"></strong> notifications
       </p>

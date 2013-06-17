@@ -4,9 +4,9 @@ from zope import component
 
 from plone.registry.interfaces import IRegistry
 
-from collective.whathappened import storage_backend as backend
+from collective.whathappened import storage_backend
 
-class IStorageManager(backend.IStorageBackend):
+class IStorageManager(storage_backend.IStorageBackend):
     """The storage manager provide a complete API to manage notifications.
     It's a wrapper around the storage backend responsible to choose the
     backend to use.
@@ -23,46 +23,58 @@ class StorageManager(object):
     def __init__(self, context, request):
         self.context = context
         self.request = request
-        self.registry = component.queryUtility(IRegistry)
-        if self.registry is None:
-            return
-        backend = self.registry.get(
-            'collective.whathappened.backend',
-            'collective.whathappened.backend.sqlite',
-        )
-        self.backend = self.context.restrictedTraverse(backend)
+        self.backend = None
+        self.registry = None
+
+    def update(self):
+        if self.backend is None:
+            self.registry = component.queryUtility(IRegistry)
+            if self.registry is None:
+                return
+            backend = self.registry.get(
+                'collective.whathappened.backend',
+                'collective.whathappened.backend.sqlite',
+            )
+            self.backend = self.context.restrictedTraverse(backend)
 
     def store(self, notification):
+        self.update()
         if self.backend is None:
             return
         return self.backend.store(notification)
 
     def getHot(self):
+        self.update()
         if self.backend is None:
             return
         return self.backend.getHot()
 
     def getAll(self):
+        self.update()
         if self.backend is None:
             return
         return self.backend.getAll()
 
     def setSeen(self, notification):
+        self.update()
         if self.backend is None:
             return
         return self.backend.setSeen(notification)
 
     def clean(self):
+        self.update()
         if self.backend is None:
             return
         return self.backend.clean()
 
     def getUnseenCount(self):
+        self.update()
         if self.backend is None:
             return
         return self.backend.getUnseenCount()
 
     def getLastNotificationTime(self):
+        self.update()
         if self.backend is None:
             return
         return self.backend.getLastNotificationTime()

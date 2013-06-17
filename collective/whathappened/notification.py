@@ -15,7 +15,6 @@ class INotification(interface.Interface):
     where = schema.ASCIILine(title=u"Where")
     when = schema.Datetime(title=u"When")
     who = schema.List(title=u"Who", value_type=schema.ASCIILine())
-    user = schema.ASCIILine(title=u"User")
     gatherer = schema.ASCIILine(title=u"Gatherer")
 
     def getId():
@@ -29,7 +28,6 @@ class Notification(object):
         self.where = where
         self.when = when
         self.who = who
-        self.user = user
         title = "%s" % self.when.strftime("%Y-%m-%d-%H-%M-%S")
         title += "-%s" % self.what.lower()
         title += "-%s" % self.where
