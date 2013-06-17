@@ -8,6 +8,7 @@
       for="*"
       template="collective_whathappened_all.pt"
       permission="zope2.View"
+      class=".views.All"
       />
 
 

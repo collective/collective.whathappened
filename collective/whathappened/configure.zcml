@@ -30,29 +30,14 @@
   <browser:page
       for="*"
       name="collective.whathappened.backend.sqlite"
-      class=".backend.SqliteBackend"
+      class=".storage_backend.SqliteStorageBackend"
       permission="zope.Public"
       />
 
-
-  <!-- EXAMPLE:
-  <browser:viewlet
-      name="collective.someviewlet"
-      manager="plone.app.layout.viewlets.interfaces.IPortalFooter"
-      class=".viewlets.MyViewlet"
-      layer=".interfaces.ILayer"
-      permission="zope2.View"
+  <utility
+      name="collective.whathappened.gatherer.useraction"
+      factory=".gatherer_backend.UserActionGathererBackend"
+      provides=".gatherer_backend.IGathererBackend"
       />
-  <include package="plone.app.contentmenu" />
-  <browser:page
-      for="*"
-      name="myview"
-      menu="plone_displayviews"
-      title="Galleria"
-      class=".myfile.MyView"
-      layer=".interfaces.ILayer"
-      permission="zope2.View"
-      />
-  -->
 
 </configure>

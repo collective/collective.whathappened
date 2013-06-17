@@ -7,6 +7,17 @@
       i18n:domain="collective.whathappened">
 
   <body>
-    <h1>COLLECTIVE.WHATHAPPENED</h1>
+
+    <div metal:fill-slot="main"
+	 tal:define="context_url string:${context/absolute_url};">
+      <h1>COLLECTIVE.WHATHAPPENED</h1>
+      <p>
+	<strong tal:content="view/notificationsCount"></strong> notifications
+      </p>
+      <ul tal:repeat="notification view/notifications">
+	<li><span tal:replace="notification/id"></span></li>
+      </ul>
+    </div>
+
   </body>
 </html>

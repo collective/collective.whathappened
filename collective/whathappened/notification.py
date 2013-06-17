@@ -16,6 +16,7 @@ class INotification(interface.Interface):
     when = schema.Datetime(title=u"When")
     who = schema.List(title=u"Who", value_type=schema.ASCIILine())
     user = schema.ASCIILine(title=u"User")
+    gatherer = schema.ASCIILine(title=u"Gatherer")
 
     def getId():
         """Get the unique id of the notification"""
@@ -33,3 +34,6 @@ class Notification(object):
         title += "-%s" % self.what.lower()
         title += "-%s" % self.where
         self.id = title
+
+    def getId(self):
+        return self.id
