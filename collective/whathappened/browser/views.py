@@ -18,8 +18,10 @@ class All(BrowserView):
         self.gatherer = GathererManager(self.context, self.request)
         self.storage = StorageManager(self.context, self.request)
 
+        self.storage.initialize()
         self.updateNotifications()
         self.notifications = self.storage.getAll()
+        self.storage.terminate()
         self.notificationsCount = len(self.notifications)
 
     def updateNotifications(self):

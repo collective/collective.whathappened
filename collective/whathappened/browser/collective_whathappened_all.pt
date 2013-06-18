@@ -18,6 +18,5 @@
 	<li><span tal:replace="notification/id"></span></li>
       </ul>
     </div>
-
   </body>
 </html>

@@ -37,6 +37,18 @@ class StorageManager(object):
             )
             self.backend = self.context.restrictedTraverse(backend)
 
+    def initialize(self):
+        self.update()
+        if self.backend is None:
+            return
+        return self.backend.initialize()
+
+    def terminate(self):
+        self.update()
+        if self.backend is None:
+            return
+        return self.backend.terminate()
+
     def store(self, notification):
         self.update()
         if self.backend is None:

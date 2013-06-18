@@ -1,3 +1,6 @@
+import datetime
+import time
+
 from zope import interface
 from zope import schema
 
@@ -23,7 +26,7 @@ class INotification(interface.Interface):
 class Notification(object):
     interface.implements(INotification)
 
-    def __init__(self, what, where, when, who, user):
+    def __init__(self, what, where, when, who, user, gatherer):
         self.what = what
         self.where = where
         self.when = when
@@ -32,6 +35,11 @@ class Notification(object):
         title += "-%s" % self.what.lower()
         title += "-%s" % self.where
         self.id = title
+        self.user = user
+        self.gatherer = gatherer
 
     def getId(self):
         return self.id
+
+    def getWhenTimestamp(self):
+        return time.mktime(self.when.timetuple())

@@ -1,10 +1,22 @@
 import datetime
+import time
+import os
+import sqlite3
+
 from zope import interface
 from Products.CMFCore.utils import getToolByName
+
+from .notification import Notification
 
 class IStorageBackend(interface.Interface):
     """A storage backend is a named utility able to store and retrieve
     notifications"""
+
+    def initiliaze():
+        """Initialize the storage backend to start a storage session"""
+
+    def terminate():
+        """Finish a storage session"""
 
     def store(notification):
         """store a notification"""
@@ -40,15 +52,62 @@ class SqliteStorageBackend(object):
         self.request = request
         self.mtool = getToolByName(self.context, 'portal_membership')
         self.user = self.mtool.getAuthenticatedMember().getId()
+        directory = os.environ.get('collective_whathappened_sqlite_directory', None)
+        self.db_path = os.path.join(directory,  '%s.sqlite' % self.user)
+        self.db = None
+
+    def initialize(self):
+        self.db = sqlite3.connect(self.db_path)
+        self.db.execute(
+            '''CREATE TABLE IF NOT EXISTS notifications(
+            `what`        TEXT,
+            `when`        INTEGER,
+            `where`       TEXT,
+            `who`         TEXT,
+            `gatherer`    TEXT)'''
+        )
+
+    def terminate(self):
+        self.db.commit()
+        self.db.close()
+        self.db = None
 
     def store(self, notification):
-        pass
+        if self.db is None:
+            return
+        self.db.execute(
+            "INSERT INTO notifications VALUES (?, ?, ?, ?, ?)",
+            (notification.what,
+            notification.getWhenTimestamp(),
+            notification.where,
+            notification.who,
+            notification.gatherer)
+        )
 
     def getHot(self):
-        pass
+        if self.db is None:
+            return []
+        return []
+
+    def _createNotificationFromResult(self, result):
+        notification = Notification(
+            result[0],
+            result[2],
+            datetime.datetime.fromtimestamp(result[1]),
+            result[3],
+            self.user,
+            result[4],
+        )
+        return notification
 
     def getAll(self):
-        return []
+        if self.db is None:
+            return []
+        results = self.db.execute("SELECT * FROM notifications").fetchall()
+        notifications = []
+        for result in results:
+            notifications.append(self._createNotificationFromResult(result))
+        return notifications
 
     def setSeen(self, notification):
         pass

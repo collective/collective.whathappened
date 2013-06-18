@@ -38,5 +38,5 @@ class GathererManager(object):
         self.update()
         notifications = []
         for backend in self.backends:
-            notifications.append(backend.getNewNotifications(lastCheck))
+            notifications += backend.getNewNotifications(lastCheck)
         return notifications

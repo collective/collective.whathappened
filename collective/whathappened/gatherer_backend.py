@@ -1,9 +1,16 @@
+import datetime
+
 from zope import interface
 from zope import schema
 from zope import component
 
 from Products.Five.browser import BrowserView
 from Products.CMFCore.utils import getToolByName
+
+from collective.history.manager import UserActionManager
+from collective.history.useraction import IUserAction
+
+from .notification import Notification
 
 class IGathererBackend(interface.Interface):
     """A gatherer backend is a named utility able to get important information
@@ -30,9 +37,29 @@ class UserActionGathererBackend(BrowserView):
         self.request = request
         self.mtool = getToolByName(self.context, 'portal_membership')
         self.user = self.mtool.getAuthenticatedMember().getId()
+        self.manager = UserActionManager(self.context, self.request)
+        self.manager.update()
+
+    def _createNotificationFromUserAction(self, useraction):
+        if not IUserAction.providedBy(useraction):
+            return
+        notification = Notification(
+            useraction.what,
+            useraction.where_path,
+            useraction.when,
+            useraction.who,
+            str(self.user),
+            str(self.getId())
+        )
+        return notification
 
     def getNewNotifications(self, lastCheck):
-        return []
+        brains = self.manager.search({'when': [lastCheck, datetime.datetime.now()]})
+        notifications = []
+        for brain in brains:
+            notification = self._createNotificationFromUserAction(brain.getObject())
+            notifications.append(notification)
+        return notifications
 
     def getId(self):
         return self.id
