@@ -19,6 +19,15 @@ class IGathererManager(interface.Interface):
     anything more than just a record in portal_registry.
     """
 
+    def update():
+        """Get the gatherer backends."""
+
+    def getNewNotifications(lastCheck):
+        """Get all new notifications since lastCheck"""
+
+    def setUser(user):
+        """Change the user the gather works on"""
+
 
 class GathererManager(object):
     interface.implements(IGathererManager)
@@ -34,9 +43,18 @@ class GathererManager(object):
             self.backends = [ view.factory(self.context, self.request) for view in views
                               if IGathererBackend.implementedBy(view.factory)]
 
+    def __getattribute__(self, name):
+        """Automatically call self.update() when other methods are called"""
+        if name not in ['update', 'backends', 'context', 'request']:
+            self.update()
+        return object.__getattribute__(self, name)
+
     def getNewNotifications(self, lastCheck):
-        self.update()
         notifications = []
         for backend in self.backends:
             notifications += backend.getNewNotifications(lastCheck)
         return notifications
+
+    def setUser(self, user):
+        for backend in self.backends:
+            backend.setUser(user)

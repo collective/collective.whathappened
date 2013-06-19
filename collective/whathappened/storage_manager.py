@@ -5,11 +5,12 @@ from zope import component
 from plone.registry.interfaces import IRegistry
 
 from collective.whathappened import storage_backend
+from collective.whathappened.exceptions import NoBackendException
 
 class IStorageManager(storage_backend.IStorageBackend):
-    """The storage manager provide a complete API to manage notifications.
-    It's a wrapper around the storage backend responsible to choose the
-    backend to use.
+    """The storage manager provide a complete API to manage notifications
+    and subscriptions. It's a wrapper around the storage backend responsible
+    to choose the backend to use.
 
     This design make it simple to code another backend without changing
     anything more than just a record in portal_registry.
@@ -36,57 +37,53 @@ class StorageManager(object):
                 'collective.whathappened.backend.sqlite',
             )
             self.backend = self.context.restrictedTraverse(backend)
+            if self.backend is None:
+                raise NoBackendException('Storage')
+
+    def __getattribute__(self, name):
+        """Automatically call self.update() when other methods are called"""
+        if name not in ['update', 'backend', 'registry', 'context', 'request']:
+            self.update()
+        return object.__getattribute__(self, name)
 
     def initialize(self):
-        self.update()
-        if self.backend is None:
-            return
         return self.backend.initialize()
 
     def terminate(self):
-        self.update()
-        if self.backend is None:
-            return
         return self.backend.terminate()
 
-    def store(self, notification):
-        self.update()
-        if self.backend is None:
-            return
-        return self.backend.store(notification)
+    def storeNotification(self, notification):
+        return self.backend.storeNotification(notification)
 
-    def getHot(self):
-        self.update()
-        if self.backend is None:
-            return
-        return self.backend.getHot()
+    def getHotNotifications(self):
+        return self.backend.getHotNotifications()
 
-    def getAll(self):
-        self.update()
-        if self.backend is None:
-            return
-        return self.backend.getAll()
+    def getAllNotifications(self):
+        return self.backend.getAllNotifications()
 
     def setSeen(self, notification):
-        self.update()
-        if self.backend is None:
-            return
         return self.backend.setSeen(notification)
 
     def clean(self):
-        self.update()
-        if self.backend is None:
-            return
         return self.backend.clean()
 
     def getUnseenCount(self):
-        self.update()
-        if self.backend is None:
-            return
         return self.backend.getUnseenCount()
 
     def getLastNotificationTime(self):
-        self.update()
-        if self.backend is None:
-            return
         return self.backend.getLastNotificationTime()
+
+    def setUser(self, user):
+        return self.backend.setUser(user)
+
+    def getUser(self):
+        return self.backend.getUser()
+
+    def saveSubscription(self, subscription):
+        return self.backend.saveSubscription(subscription)
+
+    def getSubscription(self, where):
+        return self.backend.getSubscription(where)
+
+    def getSubscriptions(self):
+        return self.backend.getSubscriptions()

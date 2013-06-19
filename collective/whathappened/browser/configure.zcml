@@ -4,13 +4,38 @@
     i18n_domain="collective.whathappened">
 
   <browser:page
-      name="collective_whathappened_all"
+      name="collective_whathappened_notifications_all"
       for="*"
-      template="collective_whathappened_all.pt"
+      template="templates/notifications_all_view.pt"
       permission="zope2.View"
-      class=".views.All"
+      class=".notifications.AllView"
+      layer="collective.whathappened.layer.Layer"
       />
 
+  <browser:viewlet
+      name="collective.whathappened.subscribe"
+      manager="plone.app.layout.viewlets.interfaces.IAboveContentTitle"
+      class=".subscribe.SubscribeViewlet"
+      template="templates/subscribe_viewlet.pt"
+      layer="collective.whathappened.layer.Layer"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      name="collective_whathappened_subscribe_subscribe"
+      for="*"
+      permission="zope2.View"
+      class=".subscribe.Subscribe"
+      layer="collective.whathappened.layer.Layer"
+      />
+
+  <browser:page
+      name="collective_whathappened_subscribe_unsubscribe"
+      for="*"
+      permission="zope2.View"
+      class=".subscribe.Unsubscribe"
+      layer="collective.whathappened.layer.Layer"
+      />
 
   <!-- EXAMPLE:
   <browser:viewlet

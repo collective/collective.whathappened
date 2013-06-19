@@ -33,7 +33,6 @@
       class=".storage_backend.SqliteStorageBackend"
       permission="zope.Public"
       />
-
   <browser:page
       for="*"
       name="collective.whathappened.gatherer.useraction"

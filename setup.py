@@ -30,9 +30,6 @@ setup(name='collective.whathappened',
       license='gpl',
       packages=find_packages(exclude=['ez_setup']),
       namespace_packages=['collective'],
-      package_data={
-          'collective.whathappened': 'component.xml'
-      },
       include_package_data=True,
       zip_safe=False,
       install_requires=[

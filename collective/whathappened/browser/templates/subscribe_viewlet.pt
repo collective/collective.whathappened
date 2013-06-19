@@ -1,0 +1,10 @@
+<div class="subscribe" tal:condition="not:view/subscribed" i18n:domain="collective.whathappened">
+  <a tal:attributes="href string:${context/absolute_url}/@@collective_whathappened_subscribe_subscribe">
+    <button>Subscribe</button>
+  </a>
+</div>
+<div class="subscribe" tal:condition="view/subscribed" i18n:domain="collective.whathappened">
+  <a tal:attributes="href string:${context/absolute_url}/@@collective_whathappened_subscribe_unsubscribe">
+    <button>Unsubscribe</button>
+  </a>
+</div>
