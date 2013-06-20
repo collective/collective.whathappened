@@ -11,7 +11,8 @@ from Products.CMFCore.utils import getToolByName
 from collective.history.manager import UserActionManager
 from collective.history.useraction import IUserAction
 
-from .notification import Notification
+from collective.whathappened.notification import Notification
+from collective.whathappened.storage_manager import StorageManager
 
 class IGathererBackend(interface.Interface):
     """A gatherer backend is a named utility able to get important information
@@ -43,6 +44,7 @@ class UserActionGathererBackend(BrowserView):
         self.user = self.mtool.getAuthenticatedMember().getId()
         self.manager = UserActionManager(self.context, self.request)
         self.manager.update()
+        self.storage = StorageManager(self.context, self.request)
 
     def _createNotificationFromUserAction(self, useraction):
         if not IUserAction.providedBy(useraction):
@@ -58,15 +60,21 @@ class UserActionGathererBackend(BrowserView):
         return notification
 
     def getNewNotifications(self, lastCheck):
-        brains = self.manager.search({
-            'created': DateTime(lastCheck),
-            'created_usage': 'range:min',
+        brains = self.manager.search(when={
+            'query': DateTime(lastCheck),
+            'range': 'min'
         })
         notifications = []
+        self.storage.initialize()
         for brain in brains:
+            subscription = self.storage.getSubscription(brain['where_path'])
+            if subscription is None or not subscription.wants:
+                continue
+            if brain['when'] < lastCheck:
+                continue
             notification = self._createNotificationFromUserAction(brain.getObject())
-            #@TODO: CHECK USER HAS SUBSCRIBED TO NOTIFICATION
             notifications.append(notification)
+        self.storage.terminate()
         return notifications
 
     def getId(self):

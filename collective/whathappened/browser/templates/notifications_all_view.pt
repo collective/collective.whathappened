@@ -15,7 +15,7 @@
 	<strong tal:content="view/notificationsCount"></strong> notifications
       </p>
       <ul tal:repeat="notification view/notifications">
-	<li><span tal:replace="notification/id"></span></li>
+	<li><a tal:attributes="href string:${view/navigation_root}/${notification/where}" tal:content="notification/show"></a></li>
       </ul>
     </div>
   </body>

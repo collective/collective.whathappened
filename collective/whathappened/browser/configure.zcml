@@ -21,6 +21,15 @@
       permission="zope2.View"
       />
 
+  <browser:viewlet
+      name="collective.whathappened.notifications_hot"
+      manager="plone.app.layout.viewlets.interfaces.IAboveContentTitle"
+      class=".notifications.HotViewlet"
+      template="templates/notifications_hot_viewlet.pt"
+      layer="collective.whathappened.layer.Layer"
+      permission="zope2.View"
+      />
+
   <browser:page
       name="collective_whathappened_subscribe_subscribe"
       for="*"

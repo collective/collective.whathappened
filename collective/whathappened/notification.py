@@ -23,6 +23,10 @@ class INotification(interface.Interface):
     def getId():
         """Get the unique id of the notification"""
 
+    def show():
+        """Return a human friendly string explaining the notification."""
+
+
 class Notification(object):
     interface.implements(INotification)
 
@@ -41,6 +45,9 @@ class Notification(object):
 
     def getId(self):
         return self.id
+
+    def show(self):
+        return "%s has %s %s" % (self.who, self.what, self.where)
 
     def getWhenTimestamp(self):
         return time.mktime(self.when.timetuple())

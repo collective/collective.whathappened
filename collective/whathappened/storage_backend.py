@@ -76,18 +76,23 @@ class SqliteStorageBackend(object):
     def initialize(self):
         self.db = sqlite3.connect(self.db_path)
         self.db.execute(
-            '''CREATE TABLE IF NOT EXISTS notifications(
+            '''
+            CREATE TABLE IF NOT EXISTS notifications(
             `what`      TEXT,
             `when`      INTEGER,
             `where`     TEXT,
             `who`       TEXT,
             `seen`      INTEGER,
-            `gatherer`  TEXT)'''
+            `gatherer`  TEXT,
+            PRIMARY KEY(`what`, `when`, `where`, `who`))
+            '''
         )
         self.db.execute(
-            '''CREATE TABLE IF NOT EXISTS subscriptions(
+            '''
+            CREATE TABLE IF NOT EXISTS subscriptions(
             `where`     TEXT PRIMARY KEY,
-            `wants`     INTEGER)'''
+            `wants`     INTEGER)
+            '''
         )
 
     def terminate(self):
@@ -98,20 +103,33 @@ class SqliteStorageBackend(object):
     def storeNotification(self, notification):
         if self.db is None:
             return
-        self.db.execute(
-            "INSERT INTO notifications VALUES (?, ?, ?, ?, ?, ?)",
-            [notification.what,
-             notification.getWhenTimestamp(),
-             notification.where,
-             notification.who,
-             notification.seen,
-             notification.gatherer]
-        )
+        try:
+            self.db.execute(
+                "INSERT INTO notifications VALUES (?, ?, ?, ?, ?, ?)",
+                [notification.what,
+                 notification.getWhenTimestamp(),
+                 notification.where,
+                 notification.who,
+                 notification.seen,
+                 notification.gatherer]
+            )
+        except sqlite3.IntegrityError:
+            pass
 
     def getHotNotifications(self):
         if self.db is None:
             return []
-        return []
+        results = self.db.execute(
+            """
+            SELECT * FROM notifications
+            ORDER BY `seen` ASC, `when` DESC
+            LIMIT 5
+            """
+        ).fetchall()
+        notifications = []
+        for result in results:
+            notifications.append(self._createNotificationFromResult(result))
+        return notifications
 
     def _createNotificationFromResult(self, result):
         notification = Notification(
@@ -128,20 +146,48 @@ class SqliteStorageBackend(object):
     def getAllNotifications(self):
         if self.db is None:
             return []
-        results = self.db.execute("SELECT * FROM notifications").fetchall()
+        results = self.db.execute(
+            """
+            SELECT * FROM notifications
+            ORDER BY `when` DESC
+            """
+        ).fetchall()
         notifications = []
         for result in results:
             notifications.append(self._createNotificationFromResult(result))
         return notifications
 
     def setSeen(self, notification):
-        pass
+        try:
+            self.db.execute(
+                """
+                UPDATE notifications
+                SET seen = 1
+                WHERE
+                    `what` = ? AND
+                    `where` = ? AND
+                    `when` = ? AND
+                    `who` = ?
+                """,
+                [notification.what,
+                 notification.where,
+                 notification.when,
+                 notification.who]
+            )
+        except:
+            pass
 
     def clean(self):
-        pass
+        lastWeek = datetime.datetime.now() - datetime.timedelta(7)
+        timestamp = time.mktime(lastWeek.timetuple())
+        self.db.execute("REMOVE FROM notifications WHERE `when` < ?", [timestamp])
 
     def getUnseenCount(self):
-        pass
+        if self.db is None:
+            return 0
+        query = self.db.execute("SELECT COUNT(*) FROM notifications WHERE `seen` = 0")
+        unseen = query.fetchone()[0]
+        return unseen
 
     def getLastNotificationTime(self):
         try:
