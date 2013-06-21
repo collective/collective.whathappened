@@ -4,6 +4,9 @@ import time
 from zope import interface
 from zope import schema
 
+from collective.whathappened.i18n import _
+
+
 class INotification(interface.Interface):
     """A notification is a set of useractions sharing the same what/where,
     and linkedd to a specifique user.
@@ -45,9 +48,6 @@ class Notification(object):
 
     def getId(self):
         return self.id
-
-    def show(self):
-        return "%s has %s %s" % (self.who, self.what, self.where)
 
     def getWhenTimestamp(self):
         return time.mktime(self.when.timetuple())

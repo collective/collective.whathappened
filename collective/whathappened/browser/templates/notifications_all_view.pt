@@ -10,12 +10,12 @@
 
     <div metal:fill-slot="main"
 	 tal:define="context_url string:${context/absolute_url};">
-      <h1>Notifications</h1>
-      <p>
-	<strong tal:content="view/notificationsCount"></strong> notifications
+      <h1 i18n:translate="">Notifications</h1>
+      <p i18n:translate="">
+	<strong i18n:name="count" tal:content="view/notificationsCount"></strong> notifications
       </p>
       <ul tal:repeat="notification view/notifications">
-	<li><a tal:attributes="href string:${view/navigation_root}/${notification/where}" tal:content="notification/show"></a></li>
+	<li><a tal:attributes="href string:${view/navigation_root}/${notification/where}" i18n:translate="" tal:content="python:view.show(notification)"></a></li>
       </ul>
     </div>
   </body>

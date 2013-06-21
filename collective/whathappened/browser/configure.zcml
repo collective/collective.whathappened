@@ -14,7 +14,7 @@
 
   <browser:viewlet
       name="collective.whathappened.subscribe"
-      manager="plone.app.layout.viewlets.interfaces.IAboveContentTitle"
+      manager="plone.app.layout.viewlets.interfaces.IBelowContentBody"
       class=".subscribe.SubscribeViewlet"
       template="templates/subscribe_viewlet.pt"
       layer="collective.whathappened.layer.Layer"
@@ -22,10 +22,9 @@
       />
 
   <browser:viewlet
-      name="collective.whathappened.notifications_hot"
-      manager="plone.app.layout.viewlets.interfaces.IAboveContentTitle"
+      name="plone.personal_bar"
+      manager="plone.app.layout.viewlets.interfaces.IPortalHeader"
       class=".notifications.HotViewlet"
-      template="templates/notifications_hot_viewlet.pt"
       layer="collective.whathappened.layer.Layer"
       permission="zope2.View"
       />

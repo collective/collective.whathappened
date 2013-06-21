@@ -1,3 +1,5 @@
+from zope import component
+
 from Products.Five.browser import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
 
@@ -5,19 +7,58 @@ from plone.app.layout.viewlets import common
 
 from collective.whathappened.subscription import Subscription
 from collective.whathappened.storage_manager import StorageManager
+from collective.whathappened.i18n import _
 
 class SubscribeViewlet(common.ViewletBase):
     def update(self):
         super(SubscribeViewlet, self).update()
-        path = '/'.join(self.context.getPhysicalPath())
-        storage = StorageManager(self.context, self.request)
-        storage.initialize()
-        subscription = storage.getSubscription(path)
-        storage.terminate()
+        self.initialize()
+        self.storage.initialize()
+        self.checkSubscription()
+        self.checkCanonicalSubscription()
+        self.storage.terminate()
+
+    def initialize(self):
+        self.storage = StorageManager(self.context, self.request)
+        context_state = component.getMultiAdapter((self.context, self.request),
+                                                  name="plone_context_state")
+        self.canonical = context_state.canonical_object()
+        self.is_default_page = self.context != self.canonical
+
+    def _getSubscription(self, path):
+        subscription = self.storage.getSubscription(path)
         if subscription is None:
-            self.subscribed = False
+            return False
         else:
-            self.subscribed = subscription.wants
+            return subscription.wants
+
+    def _hasParentSubscription(self, path):
+        path = path.rpartition('/')[0]
+        while len(path) > 0 and path != '/':
+            if '/' not in path:
+                break
+            subscription = self.storage.getSubscription(path)
+            if subscription is not None and subscription.wants:
+                return True
+            path = path.rpartition('/')[0]
+        return False
+
+    def checkSubscription(self):
+        path = '/'.join(self.context.getPhysicalPath())
+        self.subscribed = self._getSubscription(path)
+        if self._hasParentSubscription(path):
+            self.subscribed_show = False
+        else:
+            self.subscribed_show = True
+
+    def checkCanonicalSubscription(self):
+        if self.is_default_page:
+            path = '/'.join(self.canonical.getPhysicalPath())
+            self.subscribed_canonical = self._getSubscription(path)
+            if self._hasParentSubscription(path):
+                self.subscribed_canonical_show = False
+            else:
+                self.subscribed_canonical_show = True
 
 
 class Subscribe(BrowserView):
@@ -28,9 +69,11 @@ class Subscribe(BrowserView):
         storage.initialize()
         try:
             storage.saveSubscription(Subscription(path, True))
-            status.add(u"You have suscribed to %s" % path)
+            status.add(_(u"You have suscribed to ${path}.",
+                         mapping={'path': path.decode('utf-8')}))
         except:
-            status.add(u"Error while subscribing to %s" % path)
+            status.add(_(u"Error while subscribing to ${path}",
+                         mapping={'path': path.decode('utf-8')}))
         storage.terminate()
         self.request.response.redirect(self.context.absolute_url())
 
@@ -43,8 +86,10 @@ class Unsubscribe(BrowserView):
         storage.initialize()
         try:
             storage.saveSubscription(Subscription(path, False))
-            status.add(u"You have unsuscribed from %s" % path)
+            status.add(_(u"You have unsuscribed from ${path}",
+                         mapping={'path': path.decode('utf-8')}))
         except:
-            status.add(u"Error while unsubscribing from %s" % path)
+            status.add(_(u"Error while unsubscribing from ${path}",
+                         mapping={'path': path.decode('utf-8')}))
         storage.terminate()
         self.request.response.redirect(self.context.absolute_url())

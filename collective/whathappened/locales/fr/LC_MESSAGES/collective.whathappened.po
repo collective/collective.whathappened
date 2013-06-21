@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: collective.whathappened\n"
-"POT-Creation-Date: 2010-11-10 11:05+0000\n"
+"POT-Creation-Date: 2013-06-21 11:48+0000\n"
 "PO-Revision-Date: 2010-11-13 11:07+0100\n"
 "Last-Translator: YOURNAME <name@email.com>\n"
 "Language-Team: French <plone-fr@lists.plone.org>\n"
@@ -16,3 +16,48 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: collective.whathappened\n"
 "X-Is-Fallback-For: fr-be fr-ca fr-lu fr-mc fr-ch fr-fr\n"
+
+#: ./browser/templates/notifications_all_view.pt:15
+msgid "${count} notifications"
+msgstr ""
+
+#: ./notification.py:53
+msgid "${who} has ${what} ${where}"
+msgstr "${who} a ${what} ${where}"
+
+#: ./browser/subscribe.py:75
+msgid "Error while subscribing to ${path}"
+msgstr "Erreur pendant l'abonnement à ${path}"
+
+#: ./browser/subscribe.py:92
+msgid "Error while unsubscribing from ${path}"
+msgstr "Erreur pendant le désabonnement de ${path}"
+
+#: ./browser/templates/notifications_all_view.pt:13
+msgid "Notifications"
+msgstr ""
+
+#: ./browser/templates/subscribe_viewlet.pt:5
+msgid "Subscribe to this page"
+msgstr "S'abonner à cette page"
+
+#: ./browser/templates/subscribe_viewlet.pt:18
+msgid "Subscribe to this section"
+msgstr "S'abonner à cette partie"
+
+#: ./browser/templates/subscribe_viewlet.pt:11
+msgid "Unsubscribe from this page"
+msgstr "Se désabonner de cette page"
+
+#: ./browser/templates/subscribe_viewlet.pt:24
+msgid "Unsubscribe from this section"
+msgstr "Se désabonner de cette partie"
+
+#: ./browser/subscribe.py:72
+msgid "You have suscribed to ${path}."
+msgstr "Vous vous êtes abonné à ${path}"
+
+#: ./browser/subscribe.py:89
+msgid "You have unsuscribed from ${path}"
+msgstr "Vous vous êtes désabonné de ${path}"
+
