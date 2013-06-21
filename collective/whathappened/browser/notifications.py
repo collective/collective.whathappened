@@ -57,6 +57,8 @@ class AllView(BrowserView):
 class HotViewlet(common.PersonalBarViewlet):
     def update(self):
         super(HotViewlet, self).update()
+        if self.anonymous:
+            return
         self.gatherer = GathererManager(self.context, self.request)
         self.storage = StorageManager(self.context, self.request)
         self.storage.initialize()
