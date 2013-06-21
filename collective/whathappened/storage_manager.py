@@ -28,6 +28,8 @@ class StorageManager(object):
         self.registry = None
 
     def update(self):
+        """update is called automatically on every methods called.
+        See __getattribute__"""
         if self.backend is None:
             self.registry = component.queryUtility(IRegistry)
             if self.registry is None:
