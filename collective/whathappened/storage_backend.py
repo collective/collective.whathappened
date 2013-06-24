@@ -36,8 +36,8 @@ class IStorageBackend(interface.Interface):
     def getAllNotifications():
         """Get all notifications."""
 
-    def setSeen(notification):
-        """Set seen to true for the given notification and save it."""
+    def setSeen(path):
+        """Set seen to true for the given path."""
 
     def getUnseenCount():
         """Get number of unseen notification."""
@@ -206,20 +206,16 @@ class SqliteStorageBackend(object):
             notifications.append(self._createNotificationFromResult(result))
         return notifications
 
-    def setSeen(self, notification):
+    def setSeen(self, path):
         try:
             self.db.execute(
                 """
                 UPDATE notifications
                 SET seen = 1
                 WHERE
-                    `what` = ? AND
-                    `where` = ? AND
-                    `when` = ?
+                `where` = ?
                 """,
-                [notification.what,
-                 notification.where,
-                 notification.when]
+                [path]
             )
         except:
             pass
@@ -253,8 +249,8 @@ class SqliteStorageBackend(object):
             else:
                 self.db.execute("DELETE FROM subscriptions WHERE `where` = ?",
                                 [subscription.where])
-                self.db.execute("DELETE FROM notifications WHERE `where` = ?",
-                                [subscription.where])
+                self.db.execute("DELETE FROM notifications WHERE `where` LIKE ?",
+                                ['%s%%' % subscription.where])
         except sqlite3.IntegrityError:
             self.db.execute("UPDATE subscriptions SET `wants` = ? WHERE `where` = ?",
                             [subscription.wants, subscription.where])

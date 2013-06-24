@@ -62,27 +62,12 @@ class HotViewlet(common.PersonalBarViewlet):
         self.gatherer = GathererManager(self.context, self.request)
         self.storage = StorageManager(self.context, self.request)
         self.storage.initialize()
+        self.setSeen()
         self.updateNotifications()
         self.notifications = self.storage.getHotNotifications()
         self.unseenCount = self.storage.getUnseenCount()
         self.storage.terminate()
-
-        self.user_name += " (%d)" % self.unseenCount
-        portal = self.portal_state.portal()
-        portal_path = '/'.join(portal.getPhysicalPath())
-        for notification in self.notifications:
-            path = notification.where[len(portal_path):]
-            url = self.site_url + path
-            self.user_actions.append({
-                'category': 'notification',
-                'available': True,
-                'title': self.show(notification),
-                'url': url,
-                'visible': True,
-                'allowed': True,
-                'link_target': None,
-                'id': 'notification'
-            })
+        self.updateUserActions()
 
     def show(self, notification):
         what = translate(_h(notification.what.decode("utf-8")), domain="collective.history", context=self.request)
@@ -92,6 +77,41 @@ class HotViewlet(common.PersonalBarViewlet):
                      'what': what,
                      'where': notification.where
                  })
+
+    def setSeen(self):
+        path = '/'.join(self.context.getPhysicalPath())
+        self.storage.setSeen(path)
+
+    def updateUserActions(self):
+        self.user_name += " (%d)" % self.unseenCount
+        portal = self.portal_state.portal()
+        portal_path = '/'.join(portal.getPhysicalPath())
+        for notification in self.notifications:
+            path = notification.where[len(portal_path):]
+            url = self.site_url + path
+            title = self.show(notification)
+            self.user_actions.append({
+                'category': 'notification',
+                'available': True,
+                'title': title,
+                'url': url,
+                'visible': True,
+                'allowed': True,
+                'link_target': None,
+                'id': 'notification'
+            })
+        url = self.site_url + '/@@collective_whathappened_notifications_all'
+        self.user_actions.append({
+            'category': 'notification',
+            'available': True,
+            'title': _(u"See all notifications"),
+            'url': url,
+            'visible': True,
+            'allowed': True,
+            'link_target': None,
+            'id': 'notification'
+        })
+
 
     def updateNotifications(self):
         #@TODO: GET LAST CHECK FROM SESSION OR STORAGE
