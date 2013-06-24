@@ -19,7 +19,7 @@
 	  <td tal:content="notification/when"></td>
 	  <td>
 	    <strong tal:omit-tag="notification/seen">
-	      <a tal:attributes="href string:${view/navigation_root}${notification/where}" i18n:translate="" tal:content="python:view.show(notification)"></a>
+	      <a tal:attributes="href string:${notification/where}" i18n:translate="" tal:content="python:view.show(notification)"></a>
 	    </strong>
 	  </td>
 	</tr>
