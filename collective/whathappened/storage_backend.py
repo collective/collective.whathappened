@@ -93,7 +93,10 @@ class SqliteStorageBackend(object):
             `when`      INTEGER,
             `where`     TEXT,
             `who`      INTEGER,
-            PRIMARY KEY(`what`, `when`, `where`))
+            PRIMARY KEY(`what`, `when`, `where`),
+            FOREIGN KEY(`what`, `when`, `where`)
+              REFERENCES notifications(`what`, `when`, `where`)
+              ON DELETE CASCADE)
             '''
         )
         self.db.execute(
@@ -249,6 +252,8 @@ class SqliteStorageBackend(object):
                                 [subscription.where, subscription.wants])
             else:
                 self.db.execute("DELETE FROM subscriptions WHERE `where` = ?",
+                                [subscription.where])
+                self.db.execute("DELETE FROM notifications WHERE `where` = ?",
                                 [subscription.where])
         except sqlite3.IntegrityError:
             self.db.execute("UPDATE subscriptions SET `wants` = ? WHERE `where` = ?",
