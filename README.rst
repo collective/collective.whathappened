@@ -12,9 +12,11 @@ Configuration
 
 Defaut storage backend use "collective_whathappened_sqlite_directory" variable to know where to store the Sqlite databases. It should be added in the buildout configuration file. For example:
 
+::
+
   [instance]
   environment-vars +=
-      collective_whathappened_sqlite_directory ${buildout:directory}/var/sqlite
+    collective_whathappened_sqlite_directory ${buildout:directory}/var/sqlite
 
 How to install
 ==============
