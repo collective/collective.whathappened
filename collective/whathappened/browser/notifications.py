@@ -68,12 +68,16 @@ class HotViewlet(common.PersonalBarViewlet):
         self.storage.terminate()
 
         self.user_name += " (%d)" % self.unseenCount
+        portal = self.portal_state.portal()
+        portal_path = '/'.join(portal.getPhysicalPath())
         for notification in self.notifications:
+            path = notification.where[len(portal_path):]
+            url = self.site_url + path
             self.user_actions.append({
                 'category': 'notification',
                 'available': True,
                 'title': self.show(notification),
-                'url': self.context.absolute_url() + notification.where,
+                'url': url,
                 'visible': True,
                 'allowed': True,
                 'link_target': None,
