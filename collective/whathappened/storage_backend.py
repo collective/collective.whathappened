@@ -81,10 +81,19 @@ class SqliteStorageBackend(object):
             `what`      TEXT,
             `when`      INTEGER,
             `where`     TEXT,
-            `who`       TEXT,
             `seen`      INTEGER,
             `gatherer`  TEXT,
-            PRIMARY KEY(`what`, `when`, `where`, `who`))
+            PRIMARY KEY(`what`, `when`, `where`))
+            '''
+        )
+        self.db.execute(
+            '''
+            CREATE TABLE IF NOT EXISTS notifications_who(
+            `what`      TEXT,
+            `when`      INTEGER,
+            `where`     TEXT,
+            `who`      INTEGER,
+            PRIMARY KEY(`what`, `when`, `where`))
             '''
         )
         self.db.execute(
@@ -105,24 +114,61 @@ class SqliteStorageBackend(object):
             return
         try:
             self.db.execute(
-                "INSERT INTO notifications VALUES (?, ?, ?, ?, ?, ?)",
+                """
+                INSERT INTO notifications (`what`, `when`, `where`, `seen`, `gatherer`)
+                VALUES (?, ?, ?, ?, ?)
+                """,
                 [notification.what,
                  notification.getWhenTimestamp(),
                  notification.where,
-                 notification.who,
                  notification.seen,
                  notification.gatherer]
             )
+            for who in notification.who:
+                self.db.execute(
+                    """
+                    INSERT INTO notifications_who (`what`, `when`, `where`, `who`)
+                    VALUES (?, ?, ?, ?)
+                    """,
+                    [notification.what,
+                     notification.getWhenTimestamp(),
+                     notification.where,
+                     who]
+                )
         except sqlite3.IntegrityError:
             pass
+
+    def _createNotificationFromResult(self, result):
+        notification = Notification(
+            result[0],
+            result[2],
+            datetime.datetime.fromtimestamp(result[1]),
+            result[3].split(', '),
+            self.user,
+            result[4],
+            result[5],
+        )
+        return notification
 
     def getHotNotifications(self):
         if self.db is None:
             return []
         results = self.db.execute(
             """
-            SELECT * FROM notifications
-            ORDER BY `seen` ASC, `when` DESC
+            SELECT
+                n.`what`,
+                n.`when`,
+                n.`where`,
+                GROUP_CONCAT(nw.`who`, ', ') as `who`,
+                n.`gatherer`,
+                n.`seen`
+            FROM notifications n
+            LEFT JOIN notifications_who nw
+                ON n.`what` = nw.`what`
+                AND n.`when` = nw.`when`
+                AND n.`where` = nw.`where`
+            GROUP BY n.`what`, n.`when`, n.`where`
+            ORDER BY n.`seen` ASC, n.`when` DESC
             LIMIT 5
             """
         ).fetchall()
@@ -131,25 +177,25 @@ class SqliteStorageBackend(object):
             notifications.append(self._createNotificationFromResult(result))
         return notifications
 
-    def _createNotificationFromResult(self, result):
-        notification = Notification(
-            result[0],
-            result[2],
-            datetime.datetime.fromtimestamp(result[1]),
-            result[3],
-            self.user,
-            result[4],
-            result[5],
-        )
-        return notification
-
     def getAllNotifications(self):
         if self.db is None:
             return []
         results = self.db.execute(
             """
-            SELECT * FROM notifications
-            ORDER BY `when` DESC
+            SELECT
+                n.`what`,
+                n.`when`,
+                n.`where`,
+                GROUP_CONCAT(nw.`who`, ', ') as `who`,
+                n.`gatherer`,
+                n.`seen`
+            FROM notifications n
+            INNER JOIN notifications_who nw
+                ON n.`what` = nw.`what`
+                AND n.`when` = nw.`when`
+                AND n.`where` = nw.`where`
+            GROUP BY n.`what`, n.`when`, n.`where`
+            ORDER BY n.`when` DESC
             """
         ).fetchall()
         notifications = []
@@ -166,13 +212,11 @@ class SqliteStorageBackend(object):
                 WHERE
                     `what` = ? AND
                     `where` = ? AND
-                    `when` = ? AND
-                    `who` = ?
+                    `when` = ?
                 """,
                 [notification.what,
                  notification.where,
-                 notification.when,
-                 notification.who]
+                 notification.when]
             )
         except:
             pass
@@ -200,8 +244,12 @@ class SqliteStorageBackend(object):
 
     def saveSubscription(self, subscription):
         try:
-            self.db.execute("INSERT INTO subscriptions VALUES (?, ?)",
-                            [subscription.where, subscription.wants])
+            if subscription.wants:
+                self.db.execute("INSERT INTO subscriptions (`where`, `wants`) VALUES (?, ?)",
+                                [subscription.where, subscription.wants])
+            else:
+                self.db.execute("DELETE FROM subscriptions WHERE `where` = ?",
+                                [subscription.where])
         except sqlite3.IntegrityError:
             self.db.execute("UPDATE subscriptions SET `wants` = ? WHERE `where` = ?",
                             [subscription.wants, subscription.where])

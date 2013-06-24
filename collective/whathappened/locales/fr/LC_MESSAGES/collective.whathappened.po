@@ -53,11 +53,12 @@ msgstr "Se désabonner de cette page"
 msgid "Unsubscribe from this section"
 msgstr "Se désabonner de cette rubrique"
 
+
 #: ./browser/subscribe.py:72
-msgid "You have suscribed to ${path}."
+msgid "You have subscribed to ${path}."
 msgstr "Vous vous êtes abonné à ${path}"
 
 #: ./browser/subscribe.py:89
-msgid "You have unsuscribed from ${path}"
+msgid "You have unsubscribed from ${path}"
 msgstr "Vous vous êtes désabonné de ${path}"
 

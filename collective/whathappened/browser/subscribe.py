@@ -1,3 +1,5 @@
+import sqlite3
+
 from zope import component
 
 from Products.Five.browser import BrowserView
@@ -69,9 +71,9 @@ class Subscribe(BrowserView):
         storage.initialize()
         try:
             storage.saveSubscription(Subscription(path, True))
-            status.add(_(u"You have suscribed to ${path}.",
+            status.add(_(u"You have subscribed to ${path}.",
                          mapping={'path': path.decode('utf-8')}))
-        except:
+        except sqlite3.IntegrityError:
             status.add(_(u"Error while subscribing to ${path}",
                          mapping={'path': path.decode('utf-8')}))
         storage.terminate()
@@ -86,9 +88,9 @@ class Unsubscribe(BrowserView):
         storage.initialize()
         try:
             storage.saveSubscription(Subscription(path, False))
-            status.add(_(u"You have unsuscribed from ${path}",
+            status.add(_(u"You have unsubscribed from ${path}",
                          mapping={'path': path.decode('utf-8')}))
-        except:
+        except sqlite3.IntegrityError:
             status.add(_(u"Error while unsubscribing from ${path}",
                          mapping={'path': path.decode('utf-8')}))
         storage.terminate()

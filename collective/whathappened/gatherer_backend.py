@@ -53,11 +53,19 @@ class UserActionGathererBackend(BrowserView):
             useraction.what,
             useraction.where_path,
             useraction.when,
-            useraction.who,
+            [useraction.who],
             str(self.user),
             str(self.getId())
         )
         return notification
+
+    def _getSubscriptionInTree(self, path):
+        while '/' in path and path != '/':
+            subscription = self.storage.getSubscription(path)
+            if subscription is not None:
+                break
+            path = path.rpartition('/')[0]
+        return subscription
 
     def getNewNotifications(self, lastCheck):
         brains = self.manager.search(when={
@@ -67,7 +75,7 @@ class UserActionGathererBackend(BrowserView):
         notifications = []
         self.storage.initialize()
         for brain in brains:
-            subscription = self.storage.getSubscription(brain['where_path'])
+            subscription = self._getSubscriptionInTree(brain['where_path'])
             if subscription is None or not subscription.wants:
                 continue
             if brain['when'] < lastCheck:

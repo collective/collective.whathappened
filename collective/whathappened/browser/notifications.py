@@ -33,7 +33,7 @@ class AllView(BrowserView):
         what = translate(_h(notification.what.decode("utf-8")), domain="collective.history", context=self.request)
         return _(u"${who} has ${what} ${where}",
                  mapping={
-                     'who': notification.who,
+                     'who': ', '.join(notification.who),
                      'what': what,
                      'where': notification.where
                  })
@@ -88,7 +88,7 @@ class HotViewlet(common.PersonalBarViewlet):
         what = translate(_h(notification.what.decode("utf-8")), domain="collective.history", context=self.request)
         return _(u"${who} has ${what} ${where}",
                  mapping={
-                     'who': notification.who,
+                     'who': ', '.join(notification.who),
                      'what': what,
                      'where': notification.where
                  })
