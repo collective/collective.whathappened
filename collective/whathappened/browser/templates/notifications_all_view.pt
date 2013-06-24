@@ -18,14 +18,9 @@
 	<tr tal:repeat="notification view/notifications">
 	  <td tal:content="notification/when"></td>
 	  <td>
-	    <tal:block tal:condition="not:notification/seen">
-	      <strong>
-		<a tal:attributes="href string:${view/navigation_root}${notification/where}" i18n:translate="" tal:content="python:view.show(notification)"></a>
-	      </strong>
-	    </tal:block>
-	    <tal:block tal:condition="notification/seen">
+	    <strong tal:omit-tag="notification/seen">
 	      <a tal:attributes="href string:${view/navigation_root}${notification/where}" i18n:translate="" tal:content="python:view.show(notification)"></a>
-	    </tal:block>
+	    </strong>
 	  </td>
 	</tr>
       </table>

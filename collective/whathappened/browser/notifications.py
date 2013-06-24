@@ -59,12 +59,13 @@ class HotViewlet(common.PersonalBarViewlet):
         super(HotViewlet, self).update()
         if self.anonymous:
             return
+        self.setPath()
         self.gatherer = GathererManager(self.context, self.request)
         self.storage = StorageManager(self.context, self.request)
         self.storage.initialize()
         self.setSeen()
         self.updateNotifications()
-        self.notifications = self.storage.getHotNotifications()
+        self.hotNotifications = self.storage.getHotNotifications()
         self.unseenCount = self.storage.getUnseenCount()
         self.storage.terminate()
         self.updateUserActions()
@@ -86,32 +87,16 @@ class HotViewlet(common.PersonalBarViewlet):
         self.user_name += " (%d)" % self.unseenCount
         portal = self.portal_state.portal()
         portal_path = '/'.join(portal.getPhysicalPath())
-        for notification in self.notifications:
+        self.notifications = []
+        for notification in self.hotNotifications:
             path = notification.where[len(portal_path):]
             url = self.site_url + path
             title = self.show(notification)
-            self.user_actions.append({
-                'category': 'notification',
-                'available': True,
+            self.notifications.append({
                 'title': title,
                 'url': url,
-                'visible': True,
-                'allowed': True,
-                'link_target': None,
-                'id': 'notification'
+                'seen': notification.seen
             })
-        url = self.site_url + '/@@collective_whathappened_notifications_all'
-        self.user_actions.append({
-            'category': 'notification',
-            'available': True,
-            'title': _(u"See all notifications"),
-            'url': url,
-            'visible': True,
-            'allowed': True,
-            'link_target': None,
-            'id': 'notification'
-        })
-
 
     def updateNotifications(self):
         #@TODO: GET LAST CHECK FROM SESSION OR STORAGE
@@ -120,3 +105,10 @@ class HotViewlet(common.PersonalBarViewlet):
         if newNotifications is not None:
             for notification in newNotifications:
                 self.storage.storeNotification(notification)
+
+    def setPath(self):
+        context = self.context.aq_inner
+        portal_state = getMultiAdapter((context, self.request),
+                                       name=u'plone_portal_state')
+        path = portal_state.navigation_root().getPhysicalPath()
+        self.navigation_root = '/'.join(path)

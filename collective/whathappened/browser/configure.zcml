@@ -25,6 +25,7 @@
       name="plone.personal_bar"
       manager="plone.app.layout.viewlets.interfaces.IPortalHeader"
       class=".notifications.HotViewlet"
+      template="templates/personal_bar.pt"
       layer="collective.whathappened.layer.Layer"
       permission="zope2.View"
       />
