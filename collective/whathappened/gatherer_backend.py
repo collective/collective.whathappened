@@ -80,7 +80,8 @@ class UserActionGathererBackend(BrowserView):
                 continue
             if brain['when'] < lastCheck:
                 continue
-            notification = self._createNotificationFromUserAction(brain.getObject())
+            useraction = self.context.unrestrictedTraverse(brain.getPath())
+            notification = self._createNotificationFromUserAction(useraction)
             notifications.append(notification)
         self.storage.terminate()
         return notifications
