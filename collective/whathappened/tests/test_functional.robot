@@ -59,6 +59,12 @@ My Rename Content Title
     Click Button  Rename All
     Go to  ${PLONE_URL}/${id}
 
+My Open User Menu
+   Element Should Be Visible  css=dl#portal-personaltools a
+   Element Should Not Be Visible  css=dl#portal-personaltools dd.actionMenuContent
+   Click link  css=dl#portal-personaltools dt.actionMenuHeader a
+   Wait until keyword succeeds  1  5  Element Should Be Visible  css=dl#portal-personaltools dd.actionMenuContent
+
 I'm logged in as the site owner
     Log in as site owner
     Go to homepage
@@ -109,4 +115,5 @@ The subscribe button should not be visible
     Element should not be visible  css=.subscribe
 
 There should be a hot notifications '${notification}'
+    My Open User Menu
     Element should contain  css=.personaltools-notification a  ${notification}
