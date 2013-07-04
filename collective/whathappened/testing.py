@@ -12,7 +12,7 @@ class Layer(PloneSandboxLayer):
 
     def setUpZope(self, app, configurationContext):
 
-        import collective.history
+        import collective.whathappened
         self.loadZCML(package=collective.whathappened)
 
     def setUpPloneSite(self, portal):
