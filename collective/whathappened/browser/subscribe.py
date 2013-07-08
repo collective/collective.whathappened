@@ -26,6 +26,7 @@ class SubscribeViewlet(common.ViewletBase):
                                                   name="plone_context_state")
         self.canonical = context_state.canonical_object()
         self.is_default_page = self.context != self.canonical
+        self.is_anon = self.portal_state.anonymous()
 
     def _getSubscription(self, path):
         subscription = self.storage.getSubscription(path)
