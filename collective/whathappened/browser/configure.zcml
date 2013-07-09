@@ -13,15 +13,6 @@
       />
 
   <browser:viewlet
-      name="collective.whathappened.subscribe"
-      manager="plone.app.layout.viewlets.interfaces.IBelowContentBody"
-      class=".subscribe.SubscribeViewlet"
-      template="templates/subscribe_viewlet.pt"
-      layer="collective.whathappened.layer.Layer"
-      permission="zope2.View"
-      />
-
-  <browser:viewlet
       name="plone.personal_bar"
       manager="plone.app.layout.viewlets.interfaces.IPortalHeader"
       class=".notifications.HotViewlet"
@@ -36,6 +27,7 @@
       permission="zope2.View"
       class=".subscribe.Subscribe"
       layer="collective.whathappened.layer.Layer"
+      allowed_interface=".subscribe.ISubscribe"
       />
 
   <browser:page
@@ -44,6 +36,7 @@
       permission="zope2.View"
       class=".subscribe.Unsubscribe"
       layer="collective.whathappened.layer.Layer"
+      allowed_interface=".subscribe.ISubscribe"
       />
 
   <!-- EXAMPLE:

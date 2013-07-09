@@ -74,6 +74,8 @@ class SqliteStorageBackend(object):
         self.db = None
 
     def initialize(self):
+        if self.db is not None:
+            return
         self.db = sqlite3.connect(self.db_path)
         self.db.execute(
             '''
@@ -108,6 +110,8 @@ class SqliteStorageBackend(object):
         )
 
     def terminate(self):
+        if self.db is None:
+            return
         self.db.commit()
         self.db.close()
         self.db = None
