@@ -84,7 +84,8 @@ class HotViewlet(common.PersonalBarViewlet):
         self.storage.setSeen(path)
 
     def updateUserActions(self):
-        self.user_name += " (%d)" % self.unseenCount
+        if self.user_name is not None:
+            self.user_name += " (%d)" % self.unseenCount
         portal = self.portal_state.portal()
         portal_path = '/'.join(portal.getPhysicalPath())
         self.notifications = []
