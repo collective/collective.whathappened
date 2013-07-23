@@ -3,11 +3,15 @@ import time
 import os
 import sqlite3
 
+from zope import event
 from zope import interface
 from Products.CMFCore.utils import getToolByName
 
 from .notification import Notification
 from .subscription import Subscription
+from .event import SubscribedEvent
+from .event import UnsubscribedEvent
+
 
 class IStorageBackend(interface.Interface):
     """A storage backend is a named utility able to store and retrieve
@@ -258,6 +262,10 @@ class SqliteStorageBackend(object):
         except sqlite3.IntegrityError:
             self.db.execute("UPDATE subscriptions SET `wants` = ? WHERE `where` = ?",
                             [subscription.wants, subscription.where])
+        if subscription.wants:
+            event.notify(SubscribedEvent(subscription.where))
+        else:
+            event.notify(UnsubscribedEvent(subscription.where))
 
     def _createSubscriptionFromResult(self, result):
         wants = result[1] == 1

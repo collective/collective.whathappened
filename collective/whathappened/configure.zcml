@@ -22,6 +22,21 @@
       />
   <include file="upgrades.zcml" />
 
+  <!-- Triggers -->
+
+  <interface
+      interface=".event.ISubscribedEvent"
+      type="plone.contentrules.rule.interfaces.IRuleEventType"
+      name="Object subscribed"
+      />
+
+  <interface
+      interface=".event.IUnsubscribedEvent"
+      type="plone.contentrules.rule.interfaces.IRuleEventType"
+      name="Object unsubscribed"
+      />
+
+
   <interface
       interface=".layer.Layer"
       name="collective.whathappened"
