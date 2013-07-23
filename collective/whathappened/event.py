@@ -1,5 +1,5 @@
 from zope.component.interfaces import ObjectEvent
-from zope import event
+from zope import interface
 
 
 class ISubscribedEvent(interface.Interface):
