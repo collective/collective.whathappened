@@ -7,7 +7,7 @@ class ISubscribedEvent(interface.Interface):
 
 
 class SubscribedEvent(ObjectEvent):
-    interface.Implements(ISubscribedEvent)
+    interface.implements(ISubscribedEvent)
 
 
 class IUnsubscribedEvent(interface.Interface):
@@ -15,4 +15,4 @@ class IUnsubscribedEvent(interface.Interface):
 
 
 class UnsubscribedEvent(ObjectEvent):
-    interface.Implements(IUnsubscribedEvent)
+    interface.implements(IUnsubscribedEvent)
