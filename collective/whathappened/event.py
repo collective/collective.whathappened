@@ -1,8 +1,8 @@
 from zope.component.interfaces import ObjectEvent
 from zope import interface
+from zope.component.interfaces import IObjectEvent
 
-
-class ISubscribedEvent(interface.Interface):
+class ISubscribedEvent(IObjectEvent):
     pass
 
 
@@ -10,7 +10,7 @@ class SubscribedEvent(ObjectEvent):
     interface.implements(ISubscribedEvent)
 
 
-class IUnsubscribedEvent(interface.Interface):
+class IUnsubscribedEvent(IObjectEvent):
     pass
 
 
