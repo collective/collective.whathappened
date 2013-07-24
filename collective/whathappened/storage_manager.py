@@ -21,8 +21,9 @@ class IStorageManager(storage_backend.IStorageBackend):
 class StorageManager(object):
     interface.implements(IStorageManager)
 
-    def __init__(self, context):
+    def __init__(self, context, request = None):
         self.context = context
+        self.request = request
         self.backend = None
         self.registry = None
 
