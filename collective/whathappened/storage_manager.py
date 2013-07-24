@@ -21,9 +21,8 @@ class IStorageManager(storage_backend.IStorageBackend):
 class StorageManager(object):
     interface.implements(IStorageManager)
 
-    def __init__(self, context, request):
+    def __init__(self, context):
         self.context = context
-        self.request = request
         self.backend = None
         self.registry = None
 
@@ -44,7 +43,7 @@ class StorageManager(object):
 
     def __getattribute__(self, name):
         """Automatically call self.update() when other methods are called"""
-        if name not in ['update', 'backend', 'registry', 'context', 'request']:
+        if name not in ['update', 'backend', 'registry', 'context']:
             self.update()
         return object.__getattribute__(self, name)
 

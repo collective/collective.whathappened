@@ -9,6 +9,7 @@
     i18n_domain="collective.whathappened">
 
   <include package=".browser" />
+  <include package=".actions" />
   <includeDependencies package="." />
 
   <i18n:registerTranslations directory="locales" />

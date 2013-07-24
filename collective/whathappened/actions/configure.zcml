@@ -1,0 +1,38 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    xmlns:five="http://namespaces.zope.org/five"
+    >
+
+  <include package="plone.app.contentrules" />
+
+  <adapter factory=".subscription.SubscriptionActionExecutor" />
+
+  <browser:page
+      for="plone.app.contentrules.browser.interfaces.IRuleActionAdding"
+      name="collective.whathappened.actions.Subscription"
+      class=".subscription.SubscriptionActionAddForm"
+      permission="cmf.ManagePortal"
+      />
+
+  <browser:page
+      for="collective.whathappened.actions.subscription.ISubscriptionAction"
+      name="edit"
+      class=".subscription.SubscriptionActionEditForm"
+      permission="cmf.ManagePortal"
+      />
+
+  <plone:ruleAction
+      name="collective.whathappened.actions.Subscription"
+      title="Change the user's subscription to this object."
+      description="Change the user's subscription to this object."
+      for="*"
+      event="zope.component.interfaces.IObjectEvent"
+      addview="collective.whathappened.actions.Subscription"
+      editview="edit"
+      schema=".subscription.ISubscriptionAction"
+      factory=".subscription.SubscriptionAction"
+      />
+
+</configure>

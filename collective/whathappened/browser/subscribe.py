@@ -80,7 +80,7 @@ class Subscribe(BrowserView):
                 name=u'plone_portal_state'
             )
         if self.storage is None:
-            self.storage = StorageManager(self.context, self.request)
+            self.storage = StorageManager(self.context)
         if self.status is None:
             self.status = IStatusMessage(self.request)
         if self.context_path is None:
