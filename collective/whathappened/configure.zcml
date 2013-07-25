@@ -37,6 +37,16 @@
       name="Object unsubscribed"
       />
 
+  <subscriber
+      for=".event.ISubscribedEvent"
+      handler=".triggers_handlers.subscribed"
+      />
+
+  <subscriber
+      for=".event.IUnsubscribedEvent"
+      handler=".triggers_handlers.unsubscribed"
+      />
+
 
   <interface
       interface=".layer.Layer"
