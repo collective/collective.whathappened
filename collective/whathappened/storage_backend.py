@@ -78,7 +78,7 @@ class SqliteStorageBackend(object):
         self.db = None
 
     def initialize(self):
-        if self.db is not None:
+        if self.db is not None or self.user is None:
             return
         self.db = sqlite3.connect(self.db_path)
         self.db.execute(

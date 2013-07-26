@@ -68,6 +68,8 @@ class Subscribe(BrowserView):
 
     def update(self):
         self.initialize()
+        if self.is_anon:
+            return
         self.storage.initialize()
         self.checkSubscription()
         self.checkCanonicalSubscription()
@@ -135,33 +137,37 @@ class Subscribe(BrowserView):
 
     def can_subscribe(self):
         self.update()
-        cond1 = not self.is_anon
+        if self.is_anon:
+            return False
         cond2 = self.subscribed_show
         cond3 = not self.subscribed
-        return cond1 and cond2 and cond3
+        return cond2 and cond3
 
     def can_unsubscribe(self):
         self.update()
-        cond1 = not self.is_anon
+        if self.is_anon:
+            return False
         cond2 = self.subscribed_show
         cond3 = self.subscribed
-        return cond1 and cond2 and cond3
+        return cond2 and cond3
 
     def can_canonical_subscribe(self):
         self.update()
-        cond1 = not self.is_anon
+        if self.is_anon:
+            return False
         cond2 = self.subscribed_canonical_show
         cond3 = not self.subscribed_canonical
         cond4 = self.is_default_page
-        return cond1 and cond2 and cond3 and cond4
+        return cond2 and cond3 and cond4
 
     def can_canonical_unsubscribe(self):
         self.update()
-        cond1 = not self.is_anon
+        if self.is_anon:
+            return False
         cond2 = self.subscribed_canonical_show
         cond3 = self.subscribed_canonical
         cond4 = self.is_default_page
-        return cond1 and cond2 and cond3 and cond4
+        return cond2 and cond3 and cond4
 
 
 class Unsubscribe(Subscribe):
