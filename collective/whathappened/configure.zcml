@@ -32,9 +32,9 @@
       />
 
   <interface
-      interface=".event.IUnsubscribedEvent"
+      interface=".event.IBlacklistedEvent"
       type="plone.contentrules.rule.interfaces.IRuleEventType"
-      name="Object unsubscribed"
+      name="Object blacklisted"
       />
 
   <subscriber
@@ -43,8 +43,8 @@
       />
 
   <subscriber
-      for=".event.IUnsubscribedEvent"
-      handler=".triggers_handlers.unsubscribed"
+      for=".event.IBlacklistedEvent"
+      handler=".triggers_handlers.blacklisted"
       />
 
 

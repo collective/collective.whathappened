@@ -27,11 +27,23 @@ class ISubscribe(interface.Interface):
     def can_canonical_unsubscribe():
         """doc"""
 
+    def can_blacklist():
+        """doc"""
+
+    def can_unblacklist():
+        """doc"""
+
+    def can_canonical_blacklist():
+        """doc"""
+
+    def can_canonical_unblacklist():
+        """doc"""
+
 
 class Subscribe(BrowserView):
     msgid_add = u"You have subscribed to ${path}."
     msgid_err = u"Error while subscribing to ${path}"
-    subscription = True
+    action = True
     interface.implements(ISubscribe)
 
     def __init__(self, context, request):
@@ -48,13 +60,14 @@ class Subscribe(BrowserView):
         self.canonical = None
         self.subscribed_canonical = None
         self.subscribed_canonical_show = False
+        self.subscription_canonical = None
 
     def __call__(self):
         self.update()
         self.storage.initialize()
         try:
             self.storage.saveSubscription(
-                Subscription(self.context_path, self.subscription)
+                Subscription(self.context_path, self.action)
             )
             self.status.add(
                 _(self.msgid_add,
@@ -99,12 +112,10 @@ class Subscribe(BrowserView):
         if self.is_anon is None:
             self.is_anon = self.portal_state.anonymous()
 
-    def _getSubscription(self, path):
+    def _getSubscribed(self, path):
         subscription = self.storage.getSubscription(path)
-
         if subscription is None:
             return False
-
         return subscription.wants
 
     def _hasParentSubscription(self, path):
@@ -120,7 +131,8 @@ class Subscribe(BrowserView):
 
     def checkSubscription(self):
         path = '/'.join(self.context.getPhysicalPath())
-        self.subscribed = self._getSubscription(path)
+        self.subscribed = self._getSubscribed(path)
+        self.subscription = self.storage.getSubscription(path)
         if self._hasParentSubscription(path):
             self.subscribed_show = False
         else:
@@ -129,7 +141,8 @@ class Subscribe(BrowserView):
     def checkCanonicalSubscription(self):
         if self.is_default_page:
             path = '/'.join(self.canonical.getPhysicalPath())
-            self.subscribed_canonical = self._getSubscription(path)
+            self.subscribed_canonical = self._getSubscribed(path)
+            self.subscription_canonical = self.storage.getSubscription(path)
             if self._hasParentSubscription(path):
                 self.subscribed_canonical_show = False
             else:
@@ -169,8 +182,54 @@ class Subscribe(BrowserView):
         cond4 = self.is_default_page
         return cond2 and cond3 and cond4
 
+    def can_blacklist(self):
+        self.update()
+        if self.is_anon:
+            return False
+        cond1 = self.subscription is None
+        cond2 = self.subscribed
+        return cond1 or cond2
+
+    def can_unblacklist(self):
+        self.update()
+        if self.is_anon:
+            return False
+        cond1 = self.subscription is not None
+        cond2 = not self.subscribed
+        return cond1 and cond2
+
+    def can_canonical_blacklist(self):
+        self.update()
+        if self.is_anon:
+            return False
+        cond1 = self.subscription_canonical is None
+        cond2 = self.subscribed_canonical
+        cond3 = self.is_default_page
+        return (cond1 or cond2) and cond3
+
+    def can_canonical_unblacklist(self):
+        self.update()
+        if self.is_anon:
+            return False
+        cond1 = self.subscription_canonical is not None
+        cond2 = not self.subscribed_canonical
+        cond3 = self.is_default_page
+        return cond1 and cond2 and cond3
+
 
 class Unsubscribe(Subscribe):
     msgid_add = u"You have unsubscribed from ${path}"
     msgid_err = u"Error while unsubscribing from ${path}"
-    subscription = False
+    action = None
+
+
+class Blacklist(Subscribe):
+    msgid_add = u"You have blacklisted ${path}"
+    msgid_err = u"Error while unblacklisting ${path}"
+    action = False
+
+
+class Unblacklist(Subscribe):
+    msgid_add = u"You have unblacklisted ${path}"
+    msgid_err = u"Error while unblacklisting ${path}"
+    action = None

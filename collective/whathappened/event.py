@@ -10,9 +10,9 @@ class SubscribedEvent(ObjectEvent):
     interface.implements(ISubscribedEvent)
 
 
-class IUnsubscribedEvent(IObjectEvent):
+class IBlacklistedEvent(IObjectEvent):
     pass
 
 
-class UnsubscribedEvent(ObjectEvent):
-    interface.implements(IUnsubscribedEvent)
+class BlacklistedEvent(ObjectEvent):
+    interface.implements(IBlacklistedEvent)

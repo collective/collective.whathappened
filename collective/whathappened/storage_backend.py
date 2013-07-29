@@ -10,7 +10,7 @@ from Products.CMFCore.utils import getToolByName
 from .notification import Notification
 from .subscription import Subscription
 from .event import SubscribedEvent
-from .event import UnsubscribedEvent
+from .event import BlacklistedEvent
 
 
 class IStorageBackend(interface.Interface):
@@ -251,21 +251,24 @@ class SqliteStorageBackend(object):
 
     def saveSubscription(self, subscription):
         try:
-            if subscription.wants:
-                self.db.execute("INSERT INTO subscriptions (`where`, `wants`) VALUES (?, ?)",
-                                [subscription.where, subscription.wants])
-            else:
+            if subscription is None or subscription.wants is None:
                 self.db.execute("DELETE FROM subscriptions WHERE `where` = ?",
                                 [subscription.where])
-                self.db.execute("DELETE FROM notifications WHERE `where` LIKE ?",
-                                ['%s%%' % subscription.where])
+            else:
+                self.db.execute("INSERT INTO subscriptions (`where`, `wants`) VALUES (?, ?)",
+                                [subscription.where, subscription.wants])
         except sqlite3.IntegrityError:
             self.db.execute("UPDATE subscriptions SET `wants` = ? WHERE `where` = ?",
                             [subscription.wants, subscription.where])
-        if subscription.wants:
+        if subscription is None or not subscription.wants:
+            self.db.execute("DELETE FROM notifications WHERE `where` LIKE ?",
+                            ['%s%%' % subscription.where])
+        if subscription is None:
+            pass
+        elif subscription.wants:
             event.notify(SubscribedEvent(subscription.where))
         else:
-            event.notify(UnsubscribedEvent(subscription.where))
+            event.notify(BlacklistedEvent(subscription.where))
 
     def _createSubscriptionFromResult(self, result):
         wants = result[1] == 1

@@ -39,6 +39,24 @@
       allowed_interface=".subscribe.ISubscribe"
       />
 
+  <browser:page
+      name="collective_whathappened_subscribe_blacklist"
+      for="*"
+      permission="zope2.View"
+      class=".subscribe.Blacklist"
+      layer="collective.whathappened.layer.Layer"
+      allowed_interface=".subscribe.ISubscribe"
+      />
+
+  <browser:page
+      name="collective_whathappened_subscribe_unblacklist"
+      for="*"
+      permission="zope2.View"
+      class=".subscribe.Unblacklist"
+      layer="collective.whathappened.layer.Layer"
+      allowed_interface=".subscribe.ISubscribe"
+      />
+
   <!-- EXAMPLE:
   <browser:viewlet
       name="collective.someviewlet"

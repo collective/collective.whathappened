@@ -6,6 +6,6 @@ def subscribed(event):
     execute(obj, event)
 
 
-def unsubscribed(event):
+def blacklisted(event):
     obj = event.object
     execute(obj, event)
