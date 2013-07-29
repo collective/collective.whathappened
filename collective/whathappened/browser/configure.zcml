@@ -19,7 +19,6 @@
       template="templates/personal_bar.pt"
       layer="collective.whathappened.layer.Layer"
       permission="zope2.View"
-      for="Products.CMFCore.interfaces.IContentish"
       />
 
   <browser:page
