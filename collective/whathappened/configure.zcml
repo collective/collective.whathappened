@@ -66,4 +66,8 @@
       permission="zope.Public"
       />
 
+  <utility component=".vocabularies.subscriptions"
+	   name="collective.whathappened.vocabularies.subscriptions"
+	   provides="zope.schema.interfaces.IVocabularyFactory"/>
+
 </configure>

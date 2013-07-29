@@ -251,7 +251,7 @@ class SqliteStorageBackend(object):
 
     def saveSubscription(self, subscription):
         try:
-            if subscription is None or subscription.wants is None:
+            if subscription.wants is None:
                 self.db.execute("DELETE FROM subscriptions WHERE `where` = ?",
                                 [subscription.where])
             else:

@@ -19,6 +19,7 @@
       template="templates/personal_bar.pt"
       layer="collective.whathappened.layer.Layer"
       permission="zope2.View"
+      for="Products.CMFCore.interfaces.IContentish"
       />
 
   <browser:page
@@ -55,6 +56,17 @@
       class=".subscribe.Unblacklist"
       layer="collective.whathappened.layer.Layer"
       allowed_interface=".subscribe.ISubscribe"
+      />
+
+  <adapter factory=".manage.ManageFormAdapter" />
+
+  <browser:page
+      name="collective_whathappened_manage"
+      for="*"
+      permission="zope2.View"
+      class=".manage.ManageFormWrapper"
+      layer="collective.whathappened.layer.Layer"
+      template="templates/manage.pt"
       />
 
   <!-- EXAMPLE:
