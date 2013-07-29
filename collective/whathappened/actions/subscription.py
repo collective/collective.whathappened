@@ -14,6 +14,7 @@ from collective.whathappened.i18n import _
 from collective.whathappened.storage_manager import StorageManager
 from collective.whathappened.subscription import Subscription
 
+
 class ISubscriptionAction(interface.Interface):
     """Definition of the configuration available for a subscription action."""
 
