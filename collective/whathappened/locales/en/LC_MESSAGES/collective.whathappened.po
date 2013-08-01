@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: collective.whathappened\n"
-"POT-Creation-Date: 2013-07-29 14:13+0000\n"
+"POT-Creation-Date: 2013-08-01 08:50+0000\n"
 "PO-Revision-Date: 2008-02-04 18:00+0000\n"
 "Last-Translator: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
 "Language-Team: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
@@ -23,24 +23,16 @@ msgstr ""
 msgid "${title} (blacklisted)"
 msgstr ""
 
-#: ./browser/notifications.py:64
+#: ./browser/notifications.py:45
 msgid "${who} has ${what} ${where}"
 msgstr ""
 
-#: ./actions/subscription.py:66
+#: ./actions/subscription.py:67
 msgid "Add subscription action"
 msgstr ""
 
-#: ./actions/subscription.py:67
+#: ./actions/subscription.py:68
 msgid "An action which can add or remove the subscription to an object"
-msgstr ""
-
-#: ./browser/notifications.py:28
-msgid "April"
-msgstr ""
-
-#: ./browser/notifications.py:32
-msgid "August"
 msgstr ""
 
 #: ./profiles/default/actions.xml
@@ -51,16 +43,12 @@ msgstr ""
 msgid "Blacklist this section"
 msgstr ""
 
-#: ./actions/subscription.py:21
+#: ./actions/subscription.py:22
 msgid "Change subscription"
 msgstr ""
 
-#: ./actions/subscription.py:31
+#: ./actions/subscription.py:32
 msgid "Change the user's subscription to this object."
-msgstr ""
-
-#: ./browser/notifications.py:36
-msgid "December"
 msgstr ""
 
 #: ./profiles/default/actions.xml
@@ -79,60 +67,17 @@ msgstr ""
 msgid "Do not receive notifications from this section"
 msgstr ""
 
-#: ./actions/subscription.py:79
+#: ./actions/subscription.py:80
 msgid "Edit subscription action"
 msgstr ""
 
-#: ./browser/notifications.py:26
-msgid "February"
-msgstr ""
-
-#: ./browser/notifications.py:21
-msgid "Friday"
-msgstr ""
-
-#: ./browser/notifications.py:25
-msgid "January"
-msgstr ""
-
-#: ./browser/notifications.py:31
-msgid "July"
-msgstr ""
-
-#: ./browser/notifications.py:30
-msgid "June"
-msgstr ""
-
+#: ./browser/manage.py:36
 #: ./browser/templates/notifications_all_view.pt:14
 msgid "Manage my subscriptions"
 msgstr ""
 
-#: ./browser/manage.py:36
-msgid "Manage subscriptions"
-msgstr ""
-
-#: ./browser/notifications.py:27
-msgid "March"
-msgstr ""
-
-#: ./browser/notifications.py:29
-msgid "May"
-msgstr ""
-
-#: ./browser/notifications.py:17
-msgid "Monday"
-msgstr ""
-
 #: ./browser/templates/notifications_all_view.pt:13
 msgid "Notifications"
-msgstr ""
-
-#: ./browser/notifications.py:35
-msgid "November"
-msgstr ""
-
-#: ./browser/notifications.py:34
-msgid "October"
 msgstr ""
 
 #: ./profiles/default/actions.xml
@@ -143,16 +88,8 @@ msgstr ""
 msgid "Receive notifications about this content"
 msgstr ""
 
-#: ./browser/notifications.py:22
-msgid "Saturday"
-msgstr ""
-
 #: ./browser/manage.py:43
 msgid "Save"
-msgstr ""
-
-#: ./browser/notifications.py:33
-msgid "September"
 msgstr ""
 
 #: ./profiles/default/actions.xml
@@ -175,18 +112,6 @@ msgstr ""
 msgid "Subscribe to this section"
 msgstr ""
 
-#: ./browser/notifications.py:23
-msgid "Sunday"
-msgstr ""
-
-#: ./browser/notifications.py:20
-msgid "Thursday"
-msgstr ""
-
-#: ./browser/notifications.py:18
-msgid "Tuesday"
-msgstr ""
-
 #: ./profiles/default/actions.xml
 msgid "Unblacklist this page"
 msgstr ""
@@ -205,9 +130,5 @@ msgstr ""
 
 #: ./profiles/default/actions.xml
 msgid "Unsubscribe from this section"
-msgstr ""
-
-#: ./browser/notifications.py:19
-msgid "Wednesday"
 msgstr ""
 

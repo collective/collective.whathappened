@@ -5,6 +5,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView
 from plone.app.layout.viewlets import common
 from zope.component import getMultiAdapter
+from zope.i18nmessageid import MessageFactory
 from zope.i18n import translate
 
 from collective.whathappened.gatherer_manager import GathererManager
@@ -12,28 +13,8 @@ from collective.whathappened.storage_manager import StorageManager
 from collective.whathappened.i18n import _
 from collective.history.i18n import _ as _h
 
+PLMF = MessageFactory('plonelocales')
 SESSION_LAST_CHECK = 'collective.whathappened.lastcheck'
-
-_day = (_(u'Monday'),
-        _(u'Tuesday'),
-        _(u'Wednesday'),
-        _(u'Thursday'),
-        _(u'Friday'),
-        _(u'Saturday'),
-        _(u'Sunday'))
-
-_month = (_(u'January'),
-          _(u'February'),
-          _(u'March'),
-          _(u'April'),
-          _(u'May'),
-          _(u'June'),
-          _(u'July'),
-          _(u'August'),
-          _(u'September'),
-          _(u'October'),
-          _(u'November'),
-          _(u'December'))
 
 
 class AllView(BrowserView):
@@ -70,10 +51,15 @@ class AllView(BrowserView):
 
     def sortNotifications(self):
         notifications = OrderedDict()
+        ts = getToolByName(self.context, 'translation_service')
         for n in self.notifications:
+            weekday = (n.when.weekday() + 1) % 7
+            day = translate(PLMF(ts.day_msgid(weekday),
+                                 default=ts.weekday_english(weekday)))
+            month = translate(PLMF(ts.month_msgid(n.when.month),
+                                   default=ts.month_english(n.when.month)))
             date = n.when.strftime('%s %%d %s' %
-                                   (_day[n.when.weekday()],
-                                    _month[n.when.month - 1]))
+                                   (day, month))
             if not notifications.has_key(date):
                 notifications[date] = []
             notifications[date].append(n)
