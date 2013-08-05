@@ -17,6 +17,19 @@ PLMF = MessageFactory('plonelocales')
 SESSION_LAST_CHECK = 'collective.whathappened.lastcheck'
 
 
+def show(context, request, notification):
+    what = translate(_h(notification.what.decode("utf-8")),
+                     domain='collective.rcse', context=request)
+    where = notification.where.encode('utf-8')
+    where = context.restrictedTraverse(where)
+    return _(u"${who} has ${what} ${where}",
+             mapping={
+            'who': ', '.join(notification.who),
+            'what': what,
+            'where': where.title
+            })
+
+
 class AllView(BrowserView):
     def __init__(self, context, request):
         self.context = context
@@ -38,16 +51,7 @@ class AllView(BrowserView):
         self.notificationsCount = len(self.notifications)
 
     def show(self, notification):
-        what = translate(_h(notification.what.decode("utf-8")),
-                         domain="collective.history", context=self.request)
-        where = notification.where.encode('utf-8')
-        where = self.context.restrictedTraverse(where)
-        return _(u"${who} has ${what} ${where}",
-                 mapping={
-                     'who': ', '.join(notification.who),
-                     'what': what,
-                     'where': where.title
-                 })
+        return show(self.context, self.request, notification)
 
     def sortNotifications(self):
         notifications = OrderedDict()
@@ -97,16 +101,7 @@ class HotViewlet(common.PersonalBarViewlet):
         self.updateUserActions()
 
     def show(self, notification):
-        what = translate(_h(notification.what.decode("utf-8")),
-                         domain="collective.history", context=self.request)
-        where = notification.where.encode('utf-8')
-        where = self.context.restrictedTraverse(where)
-        return _(u"${who} has ${what} ${where}",
-                 mapping={
-                     'who': ', '.join(notification.who),
-                     'what': what,
-                     'where': where.title
-                 })
+        return show(self.context, self.request, notification)
 
     def setSeen(self):
         path = '/'.join(self.context.getPhysicalPath())

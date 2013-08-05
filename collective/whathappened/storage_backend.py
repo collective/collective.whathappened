@@ -136,24 +136,9 @@ class SqliteStorageBackend(object):
             FROM notifications
             WHERE `what` = ? AND `where` = ? and seen = 0
         """, [notification.what, notification.where]).fetchone()[0]
-        test = self.db.execute("""
-            UPDATE notifications
-            SET `when` = ?
-            WHERE `what` = ? AND `where` = ? AND seen = 0
-            """, [notification.getWhenTimestamp(),
-                  notification.what,
-                  notification.where])
-        test = self.db.execute("""
-            UPDATE notifications_who
-            SET `when` = ?
-            WHERE `when` = ? AND `what` = ? AND `where` = ?
-            """, [notification.getWhenTimestamp(),
-                  when,
-                  notification.what,
-                  notification.where])
         for who in notification.who:
             try:
-                test =self.db.execute("""
+                self.db.execute("""
                     INSERT INTO notifications_who (`what`, `when`, `where`, `who`)
                     VALUES (?, ?, ?, ?)
                     """, [notification.what,
