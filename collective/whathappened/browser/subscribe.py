@@ -77,7 +77,13 @@ class Subscribe(BrowserView):
             self.status.add(_(self.msgid_err,
                          mapping={'path': self.context_path.decode('utf-8')}))
         self.storage.terminate()
-        self.request.response.redirect(self.context.absolute_url())
+        self.request.response.redirect(self.nextURL())
+
+    def nextURL(self):
+        referer = self.request.get("HTTP_REFERER", None)
+        if not referer:
+            referer = self.context.absolute_url()
+        return referer
 
     def update(self):
         self.initialize()
