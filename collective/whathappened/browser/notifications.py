@@ -60,12 +60,15 @@ class AllView(BrowserView):
         what = translate(_h(notification.what.decode("utf-8")),
                          domain="collective.history", context=self.request)
         where = notification.where.encode('utf-8')
-        where = self.context.restrictedTraverse(where)
+        try:
+            where = self.context.restrictedTraverse(where).Title()
+        except KeyError:
+            where = where.split('/')[-1]
         return _(u"${who} has ${what} ${where}",
                  mapping={
                      'who': ', '.join(notification.who),
                      'what': what,
-                     'where': where.title
+                     'where': where,
                  })
 
     def sortNotifications(self):
@@ -114,12 +117,15 @@ class HotViewlet(common.PersonalBarViewlet):
         what = translate(_h(notification.what.decode("utf-8")),
                          domain="collective.history", context=self.request)
         where = notification.where.encode('utf-8')
-        where = self.context.restrictedTraverse(where)
+        try:
+            where = self.context.restrictedTraverse(where).Title()
+        except KeyError:
+            where = where.split('/')[-1]
         return _(u"${who} has ${what} ${where}",
                  mapping={
                      'who': ', '.join(notification.who),
                      'what': what,
-                     'where': where.title
+                     'where': where
                  })
 
     def setSeen(self):
