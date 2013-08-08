@@ -18,16 +18,19 @@ SESSION_LAST_CHECK = 'collective.whathappened.lastcheck'
 
 
 def show(context, request, notification):
-    what = translate(_h(notification.what.decode("utf-8")),
-                     domain='collective.rcse', context=request)
-    where = notification.where.encode('utf-8')
-    where = context.restrictedTraverse(where)
-    return _(u"${who} has ${what} ${where}",
-             mapping={
-            'who': ', '.join(notification.who),
-            'what': what,
-            'where': where.title
-            })
+        what = translate(_h(notification.what.decode("utf-8")),
+                         domain="collective.history", context=request)
+        where = notification.where.encode('utf-8')
+        try:
+            where = context.restrictedTraverse(where).Title()
+        except KeyError:
+            where = where.split('/')[-1]
+        return _(u"${who} has ${what} ${where}",
+                 mapping={
+                     'who': ', '.join(notification.who),
+                     'what': what,
+                     'where': where
+                 })
 
 
 class AllView(BrowserView):
