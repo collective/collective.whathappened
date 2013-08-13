@@ -22,7 +22,7 @@ def show(context, request, notification):
                          domain="collective.history", context=request)
         where = notification.where.encode('utf-8')
         try:
-            where = context.restrictedTraverse(where).Title()
+            where = context.restrictedTraverse(where).Title().decode('utf-8')
         except KeyError:
             where = where.split('/')[-1]
         return _(u"${who} has ${what} ${where}",
