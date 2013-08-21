@@ -87,6 +87,8 @@ class UserActionGathererBackend(BrowserView):
             if brain['what'] not in what_whitelist:
                 continue
             useraction = self.context.unrestrictedTraverse(brain.getPath())
+            if useraction.who == self.user:
+                continue
             notification = self._createNotificationFromUserAction(useraction)
             notifications.append(notification)
         self.storage.terminate()
