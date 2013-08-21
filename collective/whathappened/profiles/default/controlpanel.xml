@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<object
+    name="portal_controlpanel"
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    i18n:domain="collective.whathappened"
+    purge="False">
+
+    <configlet
+        title="Whathappened settings"
+        action_id="whathappened-settings"
+        appId="collective.whathappened"
+        category="Products"
+        condition_expr=""
+        url_expr="string:${portal_url}/@@whathappened-settings"
+        visible="True"
+        i18n:attributes="title">
+      <permission>Manage portal</permission>
+    </configlet>
+
+</object>

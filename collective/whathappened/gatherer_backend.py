@@ -14,6 +14,7 @@ from collective.history.useraction import IUserAction
 from collective.whathappened.notification import Notification
 from collective.whathappened.storage_manager import StorageManager
 
+
 class IGathererBackend(interface.Interface):
     """A gatherer backend is a named utility able to get important information
     for a specific user and to transform it into notifications"""
@@ -40,6 +41,8 @@ class UserActionGathererBackend(BrowserView):
     def __init__(self, context, request):
         self.context = context
         self.request = request
+        settings_url = '@@get-whathappened-settings'
+        self.settings = self.context.restrictedTraverse(settings_url)()
         self.mtool = getToolByName(self.context, 'portal_membership')
         self.user = self.mtool.getAuthenticatedMember().getId()
         self.manager = UserActionManager(self.context, self.request)
@@ -68,6 +71,7 @@ class UserActionGathererBackend(BrowserView):
         return subscription
 
     def getNewNotifications(self, lastCheck):
+        what_whitelist = self.settings.useraction_gatherer_whitelist
         brains = self.manager.search(when={
             'query': DateTime(lastCheck),
             'range': 'min'
@@ -79,6 +83,8 @@ class UserActionGathererBackend(BrowserView):
             if subscription is None or not subscription.wants:
                 continue
             if brain['when'] < lastCheck:
+                continue
+            if brain['what'] not in what_whitelist:
                 continue
             useraction = self.context.unrestrictedTraverse(brain.getPath())
             notification = self._createNotificationFromUserAction(useraction)

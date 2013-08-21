@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<registry>
+  <record name="collective.whathappened.settings.ISettings.useraction_gatherer_whitelist">
+    <field type="plone.registry.field.Set">
+      <value_type type="plone.registry.field.TextLine" />
+    </field>
+    <value>
+      <element>created</element>
+      <element>liked</element>
+      <element>disliked</element>
+      <element>favorited</element>
+    </value>
+  </record>
+</registry>

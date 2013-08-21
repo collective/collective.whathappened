@@ -85,4 +85,18 @@
       />
   -->
 
+  <browser:page
+      name="whathappened-settings"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      class=".settings.SettingsControlPanel"
+      permission="cmf.ManagePortal"
+      />
+
+  <browser:page
+      name="get-whathappened-settings"
+      for="*"
+      class=".settings.getSettings"
+      permission="zope2.View"
+      />
+
 </configure>
