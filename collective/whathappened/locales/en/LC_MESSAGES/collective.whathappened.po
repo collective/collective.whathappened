@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: collective.whathappened\n"
-"POT-Creation-Date: 2013-08-01 08:50+0000\n"
+"POT-Creation-Date: 2013-08-21 12:51+0000\n"
 "PO-Revision-Date: 2008-02-04 18:00+0000\n"
 "Last-Translator: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
 "Language-Team: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
@@ -23,8 +23,12 @@ msgstr ""
 msgid "${title} (blacklisted)"
 msgstr ""
 
-#: ./browser/notifications.py:45
+#: ./utility.py:37
 msgid "${who} has ${what} ${where}"
+msgstr ""
+
+#: ./utility.py:31
+msgid "${who} have ${what} ${where}"
 msgstr ""
 
 #: ./actions/subscription.py:67

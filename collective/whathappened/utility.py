@@ -26,9 +26,16 @@ class DefaultDisplay(object):
         except KeyError:
             self.where = where.split('/')[-1]
         self.who = ', '.join(notification.who)
-        return _(u"${who} has ${what} ${where}",
-                 mapping={
-                     'who': self.who,
-                     'what': self.what,
-                     'where': self.where
-                 })
+        self.plural = True if len(notification.who) > 1 else False
+        if self.plural:
+            _(u"${who} have ${what} ${where}",
+                     mapping={'who': self.who,
+                              'what': self.what,
+                              'where': self.where
+                              })
+        else:
+            return _(u"${who} has ${what} ${where}",
+                     mapping={'who': self.who,
+                              'what': self.what,
+                              'where': self.where
+                              })
