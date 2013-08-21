@@ -5,12 +5,14 @@ from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView
 from plone.app.layout.viewlets import common
 from zope.component import getMultiAdapter
+from zope import component
 from zope.i18nmessageid import MessageFactory
 from zope.i18n import translate
 
 from collective.whathappened.gatherer_manager import GathererManager
 from collective.whathappened.storage_manager import StorageManager
 from collective.whathappened.i18n import _
+from collective.whathappened.utility import IDisplay
 from collective.history.i18n import _ as _h
 
 PLMF = MessageFactory('plonelocales')
@@ -18,19 +20,12 @@ SESSION_LAST_CHECK = 'collective.whathappened.lastcheck'
 
 
 def show(context, request, notification):
-        what = translate(_h(notification.what.decode("utf-8")),
-                         domain="collective.history", context=request)
-        where = notification.where.encode('utf-8')
-        try:
-            where = context.restrictedTraverse(where).Title().decode('utf-8')
-        except KeyError:
-            where = where.split('/')[-1]
-        return _(u"${who} has ${what} ${where}",
-                 mapping={
-                     'who': ', '.join(notification.who),
-                     'what': what,
-                     'where': where
-                 })
+    utility = component.queryUtility(IDisplay,
+				     name=notification.what)
+    if utility is None:
+        utility = component.getUtility(IDisplay,
+				       name='default_display')
+    return utility.display(context, request, notification)
 
 
 class AllView(BrowserView):
@@ -148,5 +143,5 @@ def _getLastCheck(context, storage):
         lastCheck = storage.getLastNotificationTime()
     else:
         lastCheck = session[SESSION_LAST_CHECK]
-    session[SESSION_LAST_CHECK] = datetime.datetime.now()
+	session[SESSION_LAST_CHECK] = datetime.datetime.now()
     return lastCheck
