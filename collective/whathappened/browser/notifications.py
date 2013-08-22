@@ -87,19 +87,15 @@ class HotViewlet(common.PersonalBarViewlet):
         super(HotViewlet, self).update()
         if self.anonymous:
             return
-        self.setPath()
-        self.gatherer = GathererManager(self.context, self.request)
         self.storage = StorageManager(self.context, self.request)
         self.storage.initialize()
         self.setSeen()
-        self.updateNotifications()
-        self.hotNotifications = self.storage.getHotNotifications()
-        self.unseenCount = self.storage.getUnseenCount()
         self.storage.terminate()
+        self.notifications = getHotNotifications(self.context, self.request)
+        self.storage.initialize()
+        self.unseenCount = self.storage.getUnseenCount()
         self.updateUserActions()
-
-    def show(self, notification):
-        return show(self.context, self.request, notification)
+        self.storage.terminate()
 
     def setSeen(self):
         path = '/'.join(self.context.getPhysicalPath())
@@ -108,32 +104,44 @@ class HotViewlet(common.PersonalBarViewlet):
     def updateUserActions(self):
         if self.user_name is not None:
             self.user_name += " (%d)" % self.unseenCount
-        portal = self.portal_state.portal()
-        portal_path = '/'.join(portal.getPhysicalPath())
-        self.notifications = []
-        for notification in self.hotNotifications:
-            path = notification.where[len(portal_path):]
-            url = self.site_url + path
-            title = self.show(notification)
-            self.notifications.append({
+
+
+def getHotNotifications(context, request):
+    gatherer = GathererManager(context, request)
+    storage = StorageManager(context, request)
+    storage.initialize()
+    _updateNotifications(context, storage, gatherer)
+    hotNotifications = storage.getHotNotifications()
+    storage.terminate()
+    portal_path = _getPortalPath(context, request)
+    notifications = []
+    for notification in hotNotifications:
+        # path = notification.where[len(portal_path):]
+        # url = portal_path + path
+        url = notification.where
+        title = show(context, request, notification)
+        notifications.append({
                 'title': title,
                 'url': url,
                 'seen': notification.seen
-            })
+                })
+    return notifications
 
-    def updateNotifications(self):
-        lastCheck = _getLastCheck(self.context, self.storage)
-        newNotifications = self.gatherer.getNewNotifications(lastCheck)
-        if newNotifications is not None:
-            for notification in newNotifications:
-                self.storage.storeNotification(notification)
 
-    def setPath(self):
-        context = self.context.aq_inner
-        portal_state = getMultiAdapter((context, self.request),
-                                       name=u'plone_portal_state')
-        path = portal_state.navigation_root().getPhysicalPath()
-        self.navigation_root = '/'.join(path)
+def _updateNotifications(context, storage, gatherer):
+    lastCheck = _getLastCheck(context, storage)
+    newNotifications = gatherer.getNewNotifications(lastCheck)
+    if newNotifications is not None:
+        for notification in newNotifications:
+            storage.storeNotification(notification)
+
+
+def _getPortalPath(context, request):
+    context = context.aq_inner
+    portal_state = getMultiAdapter((context, request),
+                                   name=u'plone_portal_state')
+    path = portal_state.navigation_root().getPhysicalPath()
+    return '/'.join(path)
 
 
 def _getLastCheck(context, storage):
