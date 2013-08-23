@@ -92,8 +92,8 @@ class HotViewlet(common.PersonalBarViewlet):
         self.setSeen()
         self.storage.terminate()
         self.notifications = getHotNotifications(self.context, self.request)
+        self.unseenCount = getUnseenCount(self.context, self.request)
         self.storage.initialize()
-        self.unseenCount = self.storage.getUnseenCount()
         self.updateUserActions()
         self.storage.terminate()
 
@@ -104,6 +104,14 @@ class HotViewlet(common.PersonalBarViewlet):
     def updateUserActions(self):
         if self.user_name is not None:
             self.user_name += " (%d)" % self.unseenCount
+
+
+def getUnseenCount(context, request):
+    storage = StorageManager(context, request)
+    storage.initialize()
+    unseenCount = storage.getUnseenCount()
+    storage.terminate()
+    return unseenCount
 
 
 def getHotNotifications(context, request):
