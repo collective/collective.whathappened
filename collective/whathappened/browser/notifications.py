@@ -1,10 +1,15 @@
 import datetime
+import logging
+
 from collections import OrderedDict
+
+from AccessControl.unauthorized import Unauthorized
 
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView
 from plone.app.layout.viewlets import common
-from zope.component import getMultiAdapter
+from plone.app.redirector.interfaces import IRedirectionStorage
+from zope.component import getMultiAdapter, queryUtility
 from zope import component
 from zope.i18nmessageid import MessageFactory
 from zope.i18n import translate
@@ -124,13 +129,37 @@ def getHotNotifications(context, request):
     portal_path = _getPortalPath(context, request)
     notifications = []
     for notification in hotNotifications:
-        # path = notification.where[len(portal_path):]
-        # url = portal_path + path
-        url = notification.where
-        title = show(context, request, notification)
+        path = notification.where
+        content = None
+
+        if path.startswith(portal_path):
+            path = path[len(portal_path)+1:]
+
+            try:
+                content = context.restrictedTraverse(str(path))
+            except Unauthorized:
+                continue
+            except KeyError:
+                #the content have been moved or removed try to find it
+                storage = queryUtility(IRedirectionStorage)
+                if storage is None:
+                    return False
+                old_path = str(path)
+                new_path = storage.get(old_path)
+                if new_path:
+                    try:
+                        content = context.restrictedTraverse(new_path)
+                    except KeyError:
+                        continue
+                else:
+                    continue
+            except Exception, e:
+                logging.getLogger("collective.whathappens").error(e)
+                continue
+        title = show(content, request, notification)
         notifications.append({
                 'title': title,
-                'url': url,
+                'url': path,
                 'seen': notification.seen
                 })
     return notifications
