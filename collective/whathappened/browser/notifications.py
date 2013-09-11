@@ -128,34 +128,33 @@ def getHotNotifications(context, request):
     storage.terminate()
     portal_path = _getPortalPath(context, request)
     notifications = []
+
     for notification in hotNotifications:
         path = notification.where
         content = None
 
-        if path.startswith(portal_path):
-            path = path[len(portal_path)+1:]
+#        if path.startswith(portal_path):
+#            path = path[len(portal_path)+1:]
 
-            try:
-                content = context.restrictedTraverse(str(path))
-            except Unauthorized:
-                continue
-            except KeyError:
-                #the content have been moved or removed try to find it
-                storage = queryUtility(IRedirectionStorage)
-                if storage is None:
-                    return False
-                old_path = str(path)
-                new_path = storage.get(old_path)
-                if new_path:
-                    try:
-                        content = context.restrictedTraverse(new_path)
-                    except KeyError:
-                        continue
-                else:
+        try:
+            content = context.restrictedTraverse(str(path))
+        except Unauthorized:
+            continue
+        except KeyError:
+            #the content have been moved or removed try to find it
+            storage = queryUtility(IRedirectionStorage)
+            if storage is None:
+                return False
+            old_path = str(path) # Whole path needed (with portal_path)
+            new_path = storage.get(old_path)
+            if new_path:
+                try:
+                    content = context.restrictedTraverse(new_path)
+                except KeyError:
                     continue
-            except Exception, e:
-                logging.getLogger("collective.whathappens").error(e)
-                continue
+        except Exception, e:
+            logging.getLogger("collective.whathappened").error(e)
+            continue
         title = show(content, request, notification)
         notifications.append({
                 'title': title,
