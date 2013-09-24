@@ -82,7 +82,11 @@ class Subscribe(BrowserView):
     def nextURL(self):
         referer = self.request.get("HTTP_REFERER", None)
         if not referer:
-            referer = self.context.absolute_url()
+            context_state = component.getMultiAdapter(
+                (self.context, self.request),
+                name=u'plone_context_state'
+                )
+            referer = context_state.view_url()
         return referer
 
     def update(self):

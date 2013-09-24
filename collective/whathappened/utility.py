@@ -29,7 +29,7 @@ class DefaultDisplay(object):
         self.who = ', '.join(notification.who)
         self.plural = True if len(notification.who) > 1 else False
         if self.plural:
-            _(u"${who} have ${what} ${where}",
+            return _(u"${who} have ${what} ${where}",
                      mapping={'who': self.who,
                               'what': self.what,
                               'where': self.where
