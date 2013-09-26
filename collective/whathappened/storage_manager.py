@@ -7,6 +7,7 @@ from plone.registry.interfaces import IRegistry
 from collective.whathappened import storage_backend
 from collective.whathappened.exceptions import NoBackendException
 
+
 class IStorageManager(storage_backend.IStorageBackend):
     """The storage manager provide a complete API to manage notifications
     and subscriptions. It's a wrapper around the storage backend responsible
@@ -17,6 +18,7 @@ class IStorageManager(storage_backend.IStorageBackend):
     """
 
     backend = schema.TextLine(title=u"Backend name")
+
 
 class StorageManager(object):
     interface.implements(IStorageManager)

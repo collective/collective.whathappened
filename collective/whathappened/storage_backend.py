@@ -73,13 +73,14 @@ class SqliteStorageBackend(object):
         self.request = request
         self.mtool = getToolByName(self.context, 'portal_membership')
         self.user = self.mtool.getAuthenticatedMember().getId()
-        directory = os.environ.get('collective_whathappened_sqlite_directory', None)
-        self.db_path = os.path.join(directory,  '%s.sqlite' % self.user)
+        self.directory = os.environ.get('collective_whathappened_sqlite_directory', None)
+        self.db_path = None
         self.db = None
 
     def initialize(self):
         if self.db is not None or self.user is None:
             return
+        self.db_path = os.path.join(self.directory,  '%s.sqlite' % self.user)
         self.db = sqlite3.connect(self.db_path)
         self.db.execute(
             '''
