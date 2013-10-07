@@ -185,11 +185,15 @@ class SqliteStorageBackend(object):
             pass
 
     def _createNotificationFromResult(self, result):
+        if result[3] is None:
+            who = []
+        else:
+            who = result[3].split(', ')
         notification = Notification(
             result[0],
             result[2],
             datetime.datetime.fromtimestamp(result[1]),
-            result[3].split(', '),
+            who,
             self.user,
             result[4],
             result[5],
