@@ -103,7 +103,8 @@ class HotViewlet(common.PersonalBarViewlet):
         self.storage.terminate()
 
     def setSeen(self):
-        path = '/'.join(self.context.getPhysicalPath())
+        #path = '/'.join(self.context.getPhysicalPath())
+        path = self.request['PATH_TRANSLATED']
         self.storage.setSeen(path)
 
     def updateUserActions(self):
