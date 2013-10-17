@@ -105,7 +105,8 @@ class HotViewlet(common.PersonalBarViewlet):
     def setSeen(self):
         #path = '/'.join(self.context.getPhysicalPath())
         portal_path = '/'.join(self.portal_state.portal().getPhysicalPath())
-        path = self.request['PATH_TRANSLATED']
+        portal_url = self.portal_state.portal_url()
+        path = self.request['URL'][len(portal_url):]
         if not path.startswith(portal_path):
             path = portal_path + path
         self.storage.setSeen(path)
