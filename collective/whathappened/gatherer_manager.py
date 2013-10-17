@@ -7,7 +7,7 @@ from plone.app.customerize import registration
 from plone.registry.interfaces import IRegistry
 
 from collective.whathappened.gatherer_backend import IGathererBackend
-
+from collective.whathappened.exceptions import NoBackendException
 
 
 class IGathererManager(interface.Interface):
@@ -39,13 +39,20 @@ class GathererManager(object):
 
     def update(self):
         if not self.backends:
-            views = registration.getViews(IBrowserRequest)
-            self.backends = [ view.factory(self.context, self.request) for view in views
-                              if IGathererBackend.implementedBy(view.factory)]
+            self.registry = component.queryUtility(IRegistry)
+            if self.registry is None:
+                return
+            backend = self.registry.get(
+                'collective.whathappened.gatherer',
+                'collective.whathappened.gatherer.useraction'
+            )
+            self.backends = [self.context.restrictedTraverse(backend)]
+            if backend is None:
+                raise NoBackendException('Gatherer')
 
     def __getattribute__(self, name):
         """Automatically call self.update() when other methods are called"""
-        if name not in ['update', 'backends', 'context', 'request']:
+        if name not in ['update', 'registry', 'backends', 'context', 'request']:
             self.update()
         return object.__getattribute__(self, name)
 

@@ -188,5 +188,5 @@ def _getLastCheck(context, storage):
         lastCheck = storage.getLastNotificationTime()
     else:
         lastCheck = session[SESSION_LAST_CHECK]
-	session[SESSION_LAST_CHECK] = datetime.datetime.now()
+    session[SESSION_LAST_CHECK] = datetime.datetime.now()
     return lastCheck
