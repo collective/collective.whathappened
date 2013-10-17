@@ -79,12 +79,12 @@ class UserActionGathererBackend(BrowserView):
         notifications = []
         self.storage.initialize()
         for brain in brains:
-            subscription = self._getSubscriptionInTree(brain['where_path'])
+            subscription = self._getSubscriptionInTree(brain.where_path)
             if subscription is None or not subscription.wants:
                 continue
-            if brain['when'] < lastCheck:
+            if brain.when < lastCheck:
                 continue
-            if brain['what'] not in what_whitelist:
+            if brain.what not in what_whitelist:
                 continue
             useraction = self.context.unrestrictedTraverse(brain.getPath())
             if useraction.who == self.user:
