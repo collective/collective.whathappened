@@ -146,11 +146,11 @@ def getHotNotifications(context, request):
             continue
         except KeyError:
             # The content have been moved or removed try to find it
-            storage = queryUtility(IRedirectionStorage)
-            if storage is None:
+            redirection_storage = queryUtility(IRedirectionStorage)
+            if redirection_storage is None:
                 return False
             old_path = str(path) # Whole path needed (with portal_path)
-            new_path = storage.get(old_path)
+            new_path = redirection_storage.get(old_path)
             if new_path:
                 try:
                     content = context.restrictedTraverse(new_path)
