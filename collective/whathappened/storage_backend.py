@@ -33,6 +33,9 @@ class IStorageBackend(interface.Interface):
     def storeNotification(notification):
         """Store a notification."""
 
+    def removeNotification(notification):
+        """Remove a notification"""
+
     def getHotNotifications():
         """Get all "hot" notifications. Hot notifications are notifications the
         user may be the more interested in."""
@@ -181,6 +184,20 @@ class SqliteStorageBackend(object):
                 self._updateNotification(notification)
             else:
                 self._createNotification(notification)
+        except sqlite3.IntegrityError:
+            pass
+
+    def removeNotification(self, notification):
+        if self.db is None:
+            return
+        try:
+            self.db.execute(
+                """DELETE FROM notifications
+                   WHERE `what` = ? AND `when` = ? AND `where` = ?""",
+                [notification.what,
+                 notification.getWhenTimestamp(),
+                 notification.where]
+                )
         except sqlite3.IntegrityError:
             pass
 

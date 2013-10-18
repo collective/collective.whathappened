@@ -59,6 +59,9 @@ class StorageManager(object):
     def storeNotification(self, notification):
         return self.backend.storeNotification(notification)
 
+    def removeNotification(self, notification):
+        return self.backend.removeNotification(notification)
+
     def getHotNotifications(self):
         return self.backend.getHotNotifications()
 

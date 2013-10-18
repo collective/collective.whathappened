@@ -1,5 +1,7 @@
 import datetime
 
+from AccessControl.unauthorized import Unauthorized
+
 from zope import interface
 from zope import schema
 from zope import component
@@ -85,6 +87,10 @@ class UserActionGathererBackend(BrowserView):
             if brain.when < lastCheck:
                 continue
             if brain.what not in what_whitelist:
+                continue
+            try:
+                content = self.context.restrictedTraverse(brain.where_path)
+            except Unauthorized:
                 continue
             useraction = self.context.unrestrictedTraverse(brain.getPath())
             if useraction.who == self.user:

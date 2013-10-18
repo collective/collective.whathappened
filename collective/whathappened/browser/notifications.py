@@ -130,23 +130,22 @@ def getHotNotifications(context, request):
     storage.initialize()
     _updateNotifications(context, storage, gatherer)
     hotNotifications = storage.getHotNotifications()
-    storage.terminate()
     portal_path = _getPortalPath(context, request)
     notifications = []
 
     for notification in hotNotifications:
         path = notification.where
         content = None
-
 #        if path.startswith(portal_path):
 #            path = path[len(portal_path)+1:]
-
         try:
             content = context.restrictedTraverse(str(path))
         except Unauthorized:
+            # Can't view the content anymore. Delete the notification.
+            storage.removeNotification(notification)
             continue
         except KeyError:
-            #the content have been moved or removed try to find it
+            # The content have been moved or removed try to find it
             storage = queryUtility(IRedirectionStorage)
             if storage is None:
                 return False
@@ -166,6 +165,7 @@ def getHotNotifications(context, request):
                 'url': path,
                 'seen': notification.seen
                 })
+    storage.terminate()
     return notifications
 
 
