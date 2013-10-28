@@ -92,7 +92,7 @@ class UserActionGathererBackend(BrowserView):
                 content = self.context.restrictedTraverse(brain.where_path)
             except Unauthorized:
                 continue
-            useraction = self.context.unrestrictedTraverse(brain.getPath())
+            useraction = self.manager.get(brain.id)
             if useraction.who == self.user:
                 continue
             notification = self._createNotificationFromUserAction(useraction)
