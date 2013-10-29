@@ -92,6 +92,8 @@ class UserActionGathererBackend(BrowserView):
                 content = self.context.restrictedTraverse(brain.where_path)
             except Unauthorized:
                 continue
+            except KeyError:
+                continue
             useraction = self.manager.get(brain.id)
             if useraction.who == self.user:
                 continue
