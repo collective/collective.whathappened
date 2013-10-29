@@ -65,7 +65,6 @@
       permission="zope2.View"
       class=".manage.ManageFormWrapper"
       layer="collective.whathappened.layer.Layer"
-      template="templates/manage.pt"
       />
 
   <!-- EXAMPLE:
