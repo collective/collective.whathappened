@@ -25,11 +25,9 @@ SESSION_LAST_CHECK = 'collective.whathappened.lastcheck'
 
 
 def show(context, request, notification):
-    utility = component.queryUtility(IDisplay,
-				     name=notification.what)
+    utility = component.queryUtility(IDisplay, name=notification.what)
     if utility is None:
-        utility = component.getUtility(IDisplay,
-				       name='default_display')
+        utility = component.getUtility(IDisplay, name='default_display')
     return utility.display(context, request, notification)
 
 
@@ -160,9 +158,10 @@ def getHotNotifications(context, request):
             logging.getLogger("collective.whathappened").error(e)
             continue
         title = show(content, request, notification)
+        context_state = content.restrictedTraverse('plone_context_state')
         notifications.append({
                 'title': title,
-                'url': path,
+                'url': context_state.view_url(),
                 'seen': notification.seen
                 })
     storage.terminate()
