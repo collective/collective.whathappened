@@ -37,7 +37,7 @@ class INotification(interface.Interface):
 class Notification(object):
     interface.implements(INotification)
 
-    def __init__(self, what, what_more, where, when, who, user, gatherer, seen=False, info = None):
+    def __init__(self, what, where, when, who, user, gatherer, seen=False, info=None):
         self.what = what
         self.where = where
         self.when = when

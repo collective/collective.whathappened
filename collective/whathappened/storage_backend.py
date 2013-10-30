@@ -14,6 +14,13 @@ from .event import SubscribedEvent
 from .event import BlacklistedEvent
 
 
+def dict_factory(cursor, row):
+    d = {}
+    for idx, col in enumerate(cursor.description):
+        d[col[0]] = row[idx]
+    return d
+
+
 class IStorageBackend(interface.Interface):
     """A storage backend is a named utility able to store and retrieve
     notifications and subscriptions for a specific user
@@ -86,6 +93,7 @@ class SqliteStorageBackend(object):
             return
         self.db_path = os.path.join(self.directory,  '%s.sqlite' % self.user)
         self.db = sqlite3.connect(self.db_path)
+        self.db.row_factory = dict_factory
         self.db.execute(
             '''
             CREATE TABLE IF NOT EXISTS notifications(
@@ -131,7 +139,7 @@ class SqliteStorageBackend(object):
             SELECT COUNT(*)
             FROM notifications
             WHERE `what` = ? AND `where` = ? and seen = 0
-        """, [notification.what, notification.where]).fetchone()[0]
+        """, [notification.what, notification.where]).fetchone()['COUNT(*)']
         if count > 0:
             return True
         return False
@@ -141,7 +149,7 @@ class SqliteStorageBackend(object):
             SELECT `when`
             FROM notifications
             WHERE `what` = ? AND `where` = ? and seen = 0
-        """, [notification.what, notification.where]).fetchone()[0]
+        """, [notification.what, notification.where]).fetchone()['when']
         for who in notification.who:
             try:
                 self.db.execute("""
@@ -205,19 +213,19 @@ class SqliteStorageBackend(object):
             pass
 
     def _createNotificationFromResult(self, result):
-        if result[3] is None:
+        if result['who'] is None:
             who = []
         else:
-            who = result[3].split(', ')
+            who = result['who'].split(', ')
         notification = Notification(
-            result[0],
-            result[2],
-            datetime.datetime.fromtimestamp(result[1]),
+            result['what'],
+            result['where'],
+            datetime.datetime.fromtimestamp(result['when']),
             who,
             self.user,
-            result[4],
-            result[5],
-            json.loads(result[6]),
+            result['gatherer'],
+            result['seen'],
+            json.loads(result['info']),
         )
         return notification
 
@@ -299,14 +307,14 @@ class SqliteStorageBackend(object):
         if self.db is None:
             return 0
         query = self.db.execute("SELECT COUNT(*) FROM notifications WHERE `seen` = 0")
-        unseen = query.fetchone()[0]
+        unseen = query.fetchone()['COUNT(*)']
         return unseen
 
     def getLastNotificationTime(self):
         try:
             req = "SELECT `when` FROM notifications ORDER BY `when` DESC LIMIT 1"
             result = self.db.execute(req).fetchone()
-            lastTime = datetime.datetime.fromtimestamp(result[0])
+            lastTime = datetime.datetime.fromtimestamp(result['when'])
         except:
             lastTime = datetime.datetime.now() - datetime.timedelta(7)
         return lastTime
@@ -333,8 +341,8 @@ class SqliteStorageBackend(object):
             event.notify(BlacklistedEvent(subscription.where))
 
     def _createSubscriptionFromResult(self, result):
-        wants = result[1] == 1
-        subscription = Subscription(result[0], wants)
+        wants = result['wants'] == 1
+        subscription = Subscription(result['where'], wants)
         return subscription
 
     def getSubscription(self, where):
