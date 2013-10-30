@@ -1,4 +1,5 @@
 import datetime
+import json
 import time
 import os
 import sqlite3
@@ -93,6 +94,7 @@ class SqliteStorageBackend(object):
             `where`     TEXT,
             `seen`      INTEGER,
             `gatherer`  TEXT,
+            `info`      TEXT,
             PRIMARY KEY(`what`, `when`, `where`))
             '''
         )
@@ -102,7 +104,7 @@ class SqliteStorageBackend(object):
             `what`      TEXT,
             `when`      INTEGER,
             `where`     TEXT,
-            `who`      INTEGER,
+            `who`       INTEGER,
             PRIMARY KEY(`what`, `when`, `where`, `who`),
             FOREIGN KEY(`what`, `when`, `where`)
               REFERENCES notifications(`what`, `when`, `where`)
@@ -155,14 +157,15 @@ class SqliteStorageBackend(object):
     def _createNotification(self, notification):
         self.db.execute(
             """
-                INSERT INTO notifications (`what`, `when`, `where`, `seen`, `gatherer`)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO notifications (`what`, `when`, `where`, `seen`, `gatherer`, `info`)
+                VALUES (?, ?, ?, ?, ?, ?)
                 """,
             [notification.what,
              notification.getWhenTimestamp(),
              notification.where,
              notification.seen,
-             notification.gatherer]
+             notification.gatherer,
+             json.dumps(notification.info)]
             )
         for who in notification.who:
             self.db.execute(
@@ -214,6 +217,7 @@ class SqliteStorageBackend(object):
             self.user,
             result[4],
             result[5],
+            json.loads(result[6]),
         )
         return notification
 
@@ -228,7 +232,8 @@ class SqliteStorageBackend(object):
                 n.`where`,
                 GROUP_CONCAT(nw.`who`, ', ') as `who`,
                 n.`gatherer`,
-                n.`seen`
+                n.`seen`,
+                n.`info`
             FROM notifications n
             LEFT JOIN notifications_who nw
                 ON n.`what` = nw.`what`
@@ -255,7 +260,8 @@ class SqliteStorageBackend(object):
                 n.`where`,
                 GROUP_CONCAT(nw.`who`, ', ') as `who`,
                 n.`gatherer`,
-                n.`seen`
+                n.`seen`,
+                n.`info`
             FROM notifications n
             INNER JOIN notifications_who nw
                 ON n.`what` = nw.`what`

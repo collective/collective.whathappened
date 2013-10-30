@@ -21,6 +21,10 @@ class INotification(interface.Interface):
     where = schema.ASCIILine(title=u"Where")
     when = schema.Datetime(title=u"When")
     who = schema.List(title=u"Who", value_type=schema.ASCIILine())
+    info = schema.Dict(title=u"Info",
+                       description=u"More info given by the gatherer",
+                       key_type=schema.ASCIILine(),
+                       value_type=schema.ASCIILine())
     gatherer = schema.ASCIILine(title=u"Gatherer")
 
     def getId():
@@ -33,7 +37,7 @@ class INotification(interface.Interface):
 class Notification(object):
     interface.implements(INotification)
 
-    def __init__(self, what, where, when, who, user, gatherer, seen=False):
+    def __init__(self, what, what_more, where, when, who, user, gatherer, seen=False, info = None):
         self.what = what
         self.where = where
         self.when = when
@@ -44,6 +48,7 @@ class Notification(object):
         self.id = title
         self.seen = seen
         self.user = user
+        self.info = info
         self.gatherer = gatherer
 
     def getId(self):

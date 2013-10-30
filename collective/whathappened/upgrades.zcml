@@ -11,4 +11,13 @@
         handler=".upgrades.common"
         />
 
+    <upgradeStep
+        source="1005"
+        destination="1006"
+        title="Upgrade databases"
+        description=""
+        profile="collective.whathappened:default"
+        handler=".upgrades.upgrade_db"
+        />
+
 </configure>
