@@ -61,7 +61,7 @@ class UserActionGathererBackend(BrowserView):
             [useraction.who],
             str(self.user),
             str(self.getId()),
-            useraction.what_info
+            info=useraction.what_info
         )
         return notification
 
