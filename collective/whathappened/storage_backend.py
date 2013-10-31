@@ -233,6 +233,10 @@ class SqliteStorageBackend(object):
             who = []
         else:
             who = result['who'].split(', ')
+        if result['info'] is None:
+            info = None
+        else:
+            info = json.loads(result['info'])
         notification = Notification(
             result['what'],
             result['where'],
@@ -241,7 +245,7 @@ class SqliteStorageBackend(object):
             self.user,
             result['gatherer'],
             result['seen'],
-            json.loads(result['info']),
+            info,
         )
         return notification
 

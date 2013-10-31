@@ -153,8 +153,13 @@ def getHotNotifications(context, request):
                 try:
                     content = context.restrictedTraverse(new_path)
                 except KeyError:
+                    storage.removeNotification(notification)
                     continue
+            else:
+                storage.removeNotification(notification)
+                continue
         except Exception, e:
+            storage.removeNotification(notification)
             logging.getLogger("collective.whathappened").error(e)
             continue
         title = show(content, request, notification)
