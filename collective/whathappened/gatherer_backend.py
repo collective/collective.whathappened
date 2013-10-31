@@ -1,4 +1,5 @@
 import datetime
+import json
 
 from AccessControl.unauthorized import Unauthorized
 
@@ -54,6 +55,7 @@ class UserActionGathererBackend(BrowserView):
     def _createNotificationFromUserAction(self, useraction):
         if not IUserAction.providedBy(useraction):
             return
+        info = json.loads(useraction.what_info)
         notification = Notification(
             useraction.what,
             useraction.where_path,
@@ -61,7 +63,7 @@ class UserActionGathererBackend(BrowserView):
             [useraction.who],
             str(self.user),
             str(self.getId()),
-            info=useraction.what_info
+            info=info
         )
         return notification
 

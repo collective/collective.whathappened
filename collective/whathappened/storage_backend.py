@@ -154,8 +154,10 @@ class SqliteStorageBackend(object):
         count = self.db.execute("""
             SELECT COUNT(*)
             FROM notifications
-            WHERE `what` = ? AND `where` = ? and seen = 0
-        """, [notification.what, notification.where]).fetchone()['COUNT(*)']
+            WHERE `what` = ? AND `where` = ? AND `info` = ? AND seen = 0
+        """, [notification.what,
+              notification.where,
+              json.dumps(notification.info)]).fetchone()['COUNT(*)']
         if count > 0:
             return True
         return False
