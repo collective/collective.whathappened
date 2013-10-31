@@ -55,7 +55,10 @@ class UserActionGathererBackend(BrowserView):
     def _createNotificationFromUserAction(self, useraction):
         if not IUserAction.providedBy(useraction):
             return
-        info = json.loads(useraction.what_info)
+        try:
+            info = json.loads(useraction.what_info)
+        except:
+            info = None
         notification = Notification(
             useraction.what,
             useraction.where_path,

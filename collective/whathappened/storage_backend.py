@@ -58,7 +58,8 @@ class IStorageBackend(interface.Interface):
         """Get all notifications."""
 
     def setSeen(path):
-        """Set seen to true for the given path."""
+        """Set seen to true for the given path,
+        or all notifications if no path is given."""
 
     def getUnseenCount():
         """Get number of unseen notification."""
@@ -306,19 +307,14 @@ class SqliteStorageBackend(object):
             notifications.append(self._createNotificationFromResult(result))
         return notifications
 
-    def setSeen(self, path):
-        try:
+    def setSeen(self, path=None):
+        if path is None:
+            self.db.execute("UPDATE notifications SET seen = 1")
+        else:
             self.db.execute(
-                """
-                UPDATE notifications
-                SET seen = 1
-                WHERE
-                `where` = ?
-                """,
+                "UPDATE notifications SET seen = 1 WHERE `where` = ?",
                 [path]
-            )
-        except:
-            pass
+                )
 
     def clean(self):
         lastWeek = datetime.datetime.now() - datetime.timedelta(7)
@@ -421,7 +417,7 @@ class NullBackend(object):
     def getAllNotifications(self):
         return []
 
-    def setSeen(self, path):
+    def setSeen(self, path=None):
         pass
 
     def getUnseenCount(self):

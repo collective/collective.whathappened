@@ -12,6 +12,14 @@
       layer="collective.whathappened.layer.Layer"
       />
 
+  <browser:page
+      name="collective_whathappened_set_all_seen"
+      for="*"
+      permission="zope2.View"
+      class=".notifications.SetAllSeen"
+      layer="collective.whathappened.layer.Layer"
+      />
+
   <browser:viewlet
       name="plone.personal_bar"
       manager="plone.app.layout.viewlets.interfaces.IPortalHeader"
@@ -64,6 +72,14 @@
       for="*"
       permission="zope2.View"
       class=".manage.ManageFormWrapper"
+      layer="collective.whathappened.layer.Layer"
+      />
+
+  <browser:page
+      name="collective_whathappened_redirect"
+      for="*"
+      permission="zope2.View"
+      class=".redirect.RedirectView"
       layer="collective.whathappened.layer.Layer"
       />
 

@@ -1,5 +1,6 @@
 import datetime
 import logging
+import urllib
 
 from collections import OrderedDict
 
@@ -85,6 +86,16 @@ class AllView(BrowserView):
                 self.storage.storeNotification(notification)
 
 
+class SetAllSeen(BrowserView):
+    def __call__(self):
+        storage = StorageManager(self.context, self.request)
+        storage.initialize()
+        storage.setSeen()
+        storage.terminate()
+        url = '@@collective_whathappened_notifications_all'
+        self.request.response.redirect(url)
+
+
 class HotViewlet(common.PersonalBarViewlet):
     def update(self):
         super(HotViewlet, self).update()
@@ -92,7 +103,7 @@ class HotViewlet(common.PersonalBarViewlet):
             return
         self.storage = StorageManager(self.context, self.request)
         self.storage.initialize()
-        self.setSeen()
+        #self.setSeen()
         self.storage.terminate()
         self.notifications = getHotNotifications(self.context, self.request)
         self.unseenCount = getUnseenCount(self.context, self.request)
@@ -166,12 +177,25 @@ def getHotNotifications(context, request):
         context_state = content.restrictedTraverse('plone_context_state')
         notifications.append({
                 'title': title,
-                'url': context_state.view_url(),
+                'url': _redirectUrl(context, request,
+                                    context_state.view_url(),
+                                    notification.where),
                 'seen': notification.seen
                 })
     storage.terminate()
     return notifications
 
+
+def _redirectUrl(context, request, url, path):
+    context = context.aq_inner
+    portal_state = getMultiAdapter((context, request),
+                                   name=u'plone_portal_state')
+    base = portal_state.navigation_root().absolute_url()
+    url = urllib.quote(url)
+    path = urllib.quote(path)
+    redirect = '%s/collective_whathappened_redirect?redirect=%s&path=%s' \
+        % (base, url, path)
+    return redirect
 
 def _updateNotifications(context, storage, gatherer):
     lastCheck = _getLastCheck(context, storage)
