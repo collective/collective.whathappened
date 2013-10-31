@@ -1,3 +1,5 @@
+import logging
+
 from zope import interface
 from zope import schema
 from zope import component
@@ -6,6 +8,8 @@ from plone.registry.interfaces import IRegistry
 
 from collective.whathappened import storage_backend
 from collective.whathappened.exceptions import NoBackendException
+
+logger = logging.getLogger('collective.whathappened')
 
 
 class IStorageManager(storage_backend.IStorageBackend):
@@ -43,6 +47,10 @@ class StorageManager(object):
             self.backend = self.context.restrictedTraverse(backend)
             if self.backend is None:
                 raise NoBackendException('Storage')
+            if not self.backend.validateBackend():
+                logger.warning('Storage backend is not valid,'
+                               ' using NullBackend instead.')
+                self.backend = storage_backend.NullBackend()
 
     def __getattribute__(self, name):
         """Automatically call self.update() when other methods are called"""

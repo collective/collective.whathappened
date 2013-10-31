@@ -1,5 +1,6 @@
 import datetime
 import json
+import logging
 import time
 import os
 import sqlite3
@@ -12,6 +13,8 @@ from .notification import Notification
 from .subscription import Subscription
 from .event import SubscribedEvent
 from .event import BlacklistedEvent
+
+logger = logging.getLogger('collective.whathappened')
 
 
 def dict_factory(cursor, row):
@@ -26,11 +29,14 @@ class IStorageBackend(interface.Interface):
     notifications and subscriptions for a specific user
     (the authenticated one by default)."""
 
-    def initiliaze():
+    def initialize():
         """Initialize the storage backend to start a storage session."""
 
     def terminate():
         """Finish a storage session."""
+
+    def validateBackend():
+        """Check if the backend is ok."""
 
     def setUser(user):
         """change the user the storage is working on."""
@@ -133,6 +139,16 @@ class SqliteStorageBackend(object):
         self.db.commit()
         self.db.close()
         self.db = None
+
+    def validateBackend(self):
+        try:
+            self.initialize()
+            self.getHotNotifications()
+            self.terminate()
+            return True
+        except Exception as e:
+            logger.error(e)
+            return False
 
     def _notificationExist(self, notification):
         count = self.db.execute("""
@@ -366,3 +382,56 @@ class SqliteStorageBackend(object):
 
     def getUser(self):
         return self.user
+
+
+class NullBackend(object):
+    """ Null backend used in case the other backend is not valid."""
+    interface.implements(IStorageBackend)
+
+    def initialize(self):
+        pass
+
+    def terminate(self):
+        pass
+
+    def validateBackend(self):
+        return True
+
+    def setUser(self, user):
+        pass
+
+    def getUser(self):
+        return ''
+
+    def storeNotification(self, notification):
+        pass
+
+    def removeNotification(self, notification):
+        pass
+
+    def getHotNotifications(self):
+        return []
+
+    def getAllNotifications(self):
+        return []
+
+    def setSeen(self, path):
+        pass
+
+    def getUnseenCount(self):
+        return 0
+
+    def getLastNotificationTime(self):
+        return datetime.datetime.now()
+
+    def clean(self):
+        pass
+
+    def saveSubscription(self, subscription):
+        pass
+
+    def getSubscription(self, where):
+        return None
+
+    def getSubscriptions(self):
+        return []
