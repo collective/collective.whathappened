@@ -11,6 +11,7 @@ from Products.Five.browser import BrowserView
 from plone.app.layout.viewlets import common
 from plone.app.redirector.interfaces import IRedirectionStorage
 from zope.component import getMultiAdapter, queryUtility
+from zope.browser.interfaces import IBrowserView
 from zope import component
 from zope.i18nmessageid import MessageFactory
 from zope.i18n import translate
@@ -173,15 +174,19 @@ def getHotNotifications(context, request):
             storage.removeNotification(notification)
             logging.getLogger("collective.whathappened").error(e)
             continue
+
+        if IBrowserView.providedBy(content):
+            url = content.context.absolute_url() + '/@@' + content.__name__
+        else:
+            context_state = content.restrictedTraverse('plone_context_state')
+            url = context_state.view_url()
+
         title = show(content, request, notification)
-        context_state = content.restrictedTraverse('plone_context_state')
         notifications.append({
-                'title': title,
-                'url': _redirectUrl(context, request,
-                                    context_state.view_url(),
-                                    notification.where),
-                'seen': notification.seen
-                })
+            'title': title,
+            'url': _redirectUrl(context, request, url, notification.where),
+            'seen': notification.seen
+        })
     storage.terminate()
     return notifications
 
