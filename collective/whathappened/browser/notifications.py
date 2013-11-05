@@ -226,7 +226,7 @@ def _getPortalPath(context, request):
 def _getLastCheck(context, storage):
     sdm = getToolByName(context, 'session_data_manager')
     session = sdm.getSessionData()
-    if session is None or not SESSION_LAST_CHECK in session:
+    if session is None or not SESSION_LAST_CHECK in session.keys():
         lastCheck = storage.getLastNotificationTime()
     else:
         lastCheck = session[SESSION_LAST_CHECK]
