@@ -18,8 +18,8 @@ class ManageFormSchema(interface.Interface):
         title=u"Subscriptions",
         value_type=schema.Choice(
             vocabulary="collective.whathappened.vocabularies.subscriptions"
-            )
         )
+    )
 
 
 class ManageFormAdapter(object):

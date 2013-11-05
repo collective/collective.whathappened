@@ -1,12 +1,8 @@
 from zope import interface
-from zope import schema
 from zope import component
-from zope.publisher.interfaces.browser import IBrowserRequest
 
-from plone.app.customerize import registration
 from plone.registry.interfaces import IRegistry
 
-from collective.whathappened.gatherer_backend import IGathererBackend
 from collective.whathappened.exceptions import NoBackendException
 
 

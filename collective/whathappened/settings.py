@@ -11,4 +11,4 @@ class ISettings(interface.Interface):
         description=_(u"Only the useraction with these 'what' will be stored."
                       u" One what per line."),
         value_type=schema.TextLine(),
-        )
+    )

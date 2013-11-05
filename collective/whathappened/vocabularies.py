@@ -16,9 +16,7 @@ def _getTitle(context, subscription):
         return content.title
     else:
         return _(u'${title} (blacklisted)',
-                 mapping={
-                'title': content.title
-                })
+                 mapping={'title': content.title})
 
 
 def subscriptions(context):

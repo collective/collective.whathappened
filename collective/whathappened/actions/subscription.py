@@ -21,7 +21,7 @@ class ISubscriptionAction(interface.Interface):
     subscription = schema.Choice(
         title=_(u"Change subscription"),
         vocabulary=subscriptionChoice
-        )
+    )
 
 
 class SubscriptionAction(SimpleItem):
@@ -51,11 +51,11 @@ class SubscriptionActionExecutor(object):
             if subscription == 'subscribe':
                 storage.saveSubscription(
                     Subscription(context_path, True)
-                    )
+                )
             else:
                 storage.saveSubscription(
                     Subscription(context_path, False)
-                    )
+                )
             storage.terminate()
         except sqlite3.IntegrityError:
             return False

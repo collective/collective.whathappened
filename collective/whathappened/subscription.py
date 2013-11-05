@@ -1,8 +1,6 @@
 from zope import interface
 from zope import schema
 
-from Products.Five.browser import BrowserView
-from Products.CMFCore.utils import getToolByName
 
 class ISubscription(interface.Interface):
     """A subscription represents a specific location the user

@@ -1,10 +1,7 @@
-import datetime
 import time
 
 from zope import interface
 from zope import schema
-
-from collective.whathappened.i18n import _
 
 
 class INotification(interface.Interface):

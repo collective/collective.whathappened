@@ -98,7 +98,7 @@ class SqliteStorageBackend(object):
     def initialize(self):
         if self.db is not None or self.user is None:
             return
-        self.db_path = os.path.join(self.directory,  '%s.sqlite' % self.user)
+        self.db_path = os.path.join(self.directory, '%s.sqlite' % self.user)
         self.db = sqlite3.connect(self.db_path)
         self.db.row_factory = dict_factory
         self.db.execute(
@@ -164,20 +164,25 @@ class SqliteStorageBackend(object):
         return False
 
     def _updateNotification(self, notification):
-        when = self.db.execute("""
+        self.db.execute("""
             SELECT `when`
             FROM notifications
             WHERE `what` = ? AND `where` = ? and seen = 0
         """, [notification.what, notification.where]).fetchone()['when']
         for who in notification.who:
             try:
-                self.db.execute("""
+                self.db.execute(
+                    """
                     INSERT INTO notifications_who (`what`, `when`, `where`, `who`)
                     VALUES (?, ?, ?, ?)
-                    """, [notification.what,
-                          notification.getWhenTimestamp(),
-                          notification.where,
-                          who])
+                    """,
+                    [
+                        notification.what,
+                        notification.getWhenTimestamp(),
+                        notification.where,
+                        who,
+                    ]
+                )
             except sqlite3.IntegrityError:
                 pass
 
@@ -186,25 +191,25 @@ class SqliteStorageBackend(object):
             """
                 INSERT INTO notifications (`what`, `when`, `where`, `seen`, `gatherer`, `info`)
                 VALUES (?, ?, ?, ?, ?, ?)
-                """,
+            """,
             [notification.what,
              notification.getWhenTimestamp(),
              notification.where,
              notification.seen,
              notification.gatherer,
              json.dumps(notification.info)]
-            )
+        )
         for who in notification.who:
             self.db.execute(
                 """
                     INSERT INTO notifications_who (`what`, `when`, `where`, `who`)
                     VALUES (?, ?, ?, ?)
-                    """,
+                """,
                 [notification.what,
                  notification.getWhenTimestamp(),
                  notification.where,
                  who]
-                )
+            )
 
     def storeNotification(self, notification):
         if self.db is None:
@@ -227,7 +232,7 @@ class SqliteStorageBackend(object):
                 [notification.what,
                  notification.getWhenTimestamp(),
                  notification.where]
-                )
+            )
         except sqlite3.IntegrityError:
             pass
 
@@ -314,7 +319,7 @@ class SqliteStorageBackend(object):
             self.db.execute(
                 "UPDATE notifications SET seen = 1 WHERE `where` = ?",
                 [path]
-                )
+            )
 
     def clean(self):
         lastWeek = datetime.datetime.now() - datetime.timedelta(7)

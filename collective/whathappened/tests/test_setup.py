@@ -4,10 +4,10 @@ from zope import component
 from zope.publisher.interfaces.browser import IBrowserRequest
 from plone.app.customerize import registration
 from plone.registry.interfaces import IRegistry
-from Products.CMFPlone.interfaces.constrains import ISelectableConstrainTypes
 
 from collective.whathappened.tests import base
 from collective.whathappened.gatherer_backend import IGathererBackend
+
 
 class TestSetup(base.IntegrationTestCase):
     """We tests the setup (install) of the addons. You should check all
@@ -31,8 +31,10 @@ class TestSetup(base.IntegrationTestCase):
 
     def test_gatherer(self):
         views = registration.getViews(IBrowserRequest)
-        self.backends = [ view.factory(self.portal, self.request) for view in views
-                          if IGathererBackend.implementedBy(view.factory)]
+        self.backends = [
+            view.factory(self.portal, self.request) for view in views
+            if IGathererBackend.implementedBy(view.factory)
+        ]
         self.assertEqual(len(self.backends), 1)
 
 

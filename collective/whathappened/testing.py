@@ -27,5 +27,6 @@ FUNCTIONAL = FunctionalTesting(bases=(FIXTURE,),
                                name="collective.whathappened:Functional")
 
 ROBOT = FunctionalTesting(
-        bases=(AUTOLOGIN_LIBRARY_FIXTURE, FIXTURE, z2.ZSERVER),
-    name="collective.whathappened:Robot")
+    bases=(AUTOLOGIN_LIBRARY_FIXTURE, FIXTURE, z2.ZSERVER),
+    name="collective.whathappened:Robot"
+)

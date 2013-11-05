@@ -2,6 +2,7 @@ from zope.component.interfaces import ObjectEvent
 from zope import interface
 from zope.component.interfaces import IObjectEvent
 
+
 class ISubscribedEvent(IObjectEvent):
     pass
 

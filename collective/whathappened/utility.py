@@ -3,7 +3,6 @@ from zope import interface
 
 from collective.history.i18n import _ as _h
 from collective.whathappened.i18n import _
-from zope.security.interfaces import Unauthorized
 
 
 class IDisplay(interface.Interface):
@@ -19,7 +18,7 @@ class DefaultDisplay(object):
 
     def display(self, context, request, notification):
         self.what = translate(_h(notification.what.decode("utf-8")),
-                         domain="collective.history", context=request)
+                              domain="collective.history", context=request)
         where = notification.where.encode('utf-8')
         if context is not None:
             title = context.Title()

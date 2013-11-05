@@ -1,11 +1,9 @@
-import datetime
 import json
 
 from AccessControl.unauthorized import Unauthorized
 
 from zope import interface
 from zope import schema
-from zope import component
 from DateTime import DateTime
 
 from Products.Five.browser import BrowserView
@@ -95,7 +93,7 @@ class UserActionGathererBackend(BrowserView):
             if brain.what not in what_whitelist:
                 continue
             try:
-                content = self.context.restrictedTraverse(brain.where_path)
+                self.context.restrictedTraverse(brain.where_path)
             except Unauthorized:
                 continue
             except KeyError:

@@ -2,9 +2,11 @@ import os
 import sqlite3
 
 from Products.CMFCore.utils import getToolByName
-PROFILE = 'profile-collective.whathappened:default'
 
 from collective.whathappened import config
+
+PROFILE = 'profile-collective.whathappened:default'
+
 
 def common(context):
     setup = getToolByName(context, 'portal_setup')

@@ -6,8 +6,6 @@ from zope import interface
 from Products.Five.browser import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
 
-from plone.app.layout.viewlets import common
-
 from collective.whathappened.subscription import Subscription
 from collective.whathappened.storage_manager import StorageManager
 from collective.whathappened.i18n import _
@@ -61,6 +59,7 @@ class Subscribe(BrowserView):
         self.subscribed_canonical = None
         self.subscribed_canonical_show = False
         self.subscription_canonical = None
+        self.plone_tools_loaded = False
 
     def __call__(self):
         self.update()
@@ -69,13 +68,15 @@ class Subscribe(BrowserView):
             self.storage.saveSubscription(
                 Subscription(self.context_path, self.action)
             )
-            self.status.add(
-                _(self.msgid_add,
-                mapping={'path': self.context_path.decode('utf-8')})
-            )
+            self.status.add(_(
+                self.msgid_add,
+                mapping={'path': self.context_path.decode('utf-8')}
+            ))
         except sqlite3.IntegrityError:
-            self.status.add(_(self.msgid_err,
-                         mapping={'path': self.context_path.decode('utf-8')}))
+            self.status.add(_(
+                self.msgid_err,
+                mapping={'path': self.context_path.decode('utf-8')}
+            ))
         self.storage.terminate()
         self.request.response.redirect(self.nextURL())
 
@@ -85,7 +86,7 @@ class Subscribe(BrowserView):
             context_state = component.getMultiAdapter(
                 (self.context, self.request),
                 name=u'plone_context_state'
-                )
+            )
             referer = context_state.view_url()
         return referer
 
@@ -99,22 +100,20 @@ class Subscribe(BrowserView):
         self.storage.terminate()
 
     def initialize(self):
-        if self.portal_state is None:
+        if not self.plone_tools_loaded:
             self.portal_state = component.getMultiAdapter(
                 (self.context, self.request),
                 name=u'plone_portal_state'
             )
-        if self.storage is None:
-            self.storage = StorageManager(self.context)
-        if self.status is None:
             self.status = IStatusMessage(self.request)
-        if self.context_path is None:
-            self.context_path = '/'.join(self.context.getPhysicalPath())
-        if self.context_state is None:
             self.context_state = component.getMultiAdapter(
                 (self.context, self.request),
                 name="plone_context_state"
             )
+        if self.storage is None:
+            self.storage = StorageManager(self.context)
+        if self.context_path is None:
+            self.context_path = '/'.join(self.context.getPhysicalPath())
         if self.canonical is None:
             self.canonical = self.context_state.canonical_object()
         if self.is_default_page is None:
