@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-08-21 12:51+0000\n"
+"POT-Creation-Date: 2013-11-06 14:03+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: collective.whathappened\n"
 
-#: ./browser/templates/notifications_all_view.pt:16
+#: ./browser/templates/notifications_all_view.pt:17
 msgid "${count} notifications"
 msgstr ""
 
-#: ./vocabularies.py:12
+#: ./vocabularies.py:18
 msgid "${title} (blacklisted)"
 msgstr ""
 
@@ -86,6 +86,10 @@ msgstr ""
 msgid "Notifications"
 msgstr ""
 
+#: ./settings.py:11
+msgid "Only the useraction with these 'what' will be stored. One what per line."
+msgstr ""
+
 #: ./profiles/default/actions.xml
 msgid "Receive notifications about content from this section"
 msgstr ""
@@ -96,6 +100,10 @@ msgstr ""
 
 #: ./browser/manage.py:43
 msgid "Save"
+msgstr ""
+
+#: ./browser/templates/notifications_all_view.pt:15
+msgid "Set all notifications to seen"
 msgstr ""
 
 #: ./profiles/default/actions.xml
@@ -136,5 +144,14 @@ msgstr ""
 
 #: ./profiles/default/actions.xml
 msgid "Unsubscribe from this section"
+msgstr ""
+
+#: ./settings.py:10
+msgid "Useraction gatherer whitelist"
+msgstr ""
+
+#: ./browser/settings.py:12
+#: ./profiles/default/controlpanel.xml
+msgid "Whathappened settings"
 msgstr ""
 
