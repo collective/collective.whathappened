@@ -19,7 +19,7 @@ msgstr ""
 
 #: ./browser/templates/notifications_all_view.pt:17
 msgid "${count} notifications"
-msgstr ""
+msgstr "${count} notifications"
 
 #: ./vocabularies.py:18
 msgid "${title} (blacklisted)"
@@ -84,11 +84,11 @@ msgstr "Gérer mes abonnements"
 
 #: ./browser/templates/notifications_all_view.pt:13
 msgid "Notifications"
-msgstr ""
+msgstr "Notifications"
 
 #: ./settings.py:11
 msgid "Only the useraction with these 'what' will be stored. One what per line."
-msgstr ""
+msgstr "Seul les actions avec ce 'quoi' seront enregistrées. Une par ligne."
 
 #: ./profiles/default/actions.xml
 msgid "Receive notifications about content from this section"
@@ -104,7 +104,7 @@ msgstr "Sauvegarder"
 
 #: ./browser/templates/notifications_all_view.pt:15
 msgid "Set all notifications to seen"
-msgstr ""
+msgstr "Marquer toutes les notifications comme lues"
 
 #: ./profiles/default/actions.xml
 msgid "Stop not receive notifications about contents from this section"
@@ -148,10 +148,10 @@ msgstr "Se désabonner de cette rubrique"
 
 #: ./settings.py:10
 msgid "Useraction gatherer whitelist"
-msgstr ""
+msgstr "Liste blanche du collecteur d'actions utilisateur"
 
 #: ./browser/settings.py:12
 #: ./profiles/default/controlpanel.xml
 msgid "Whathappened settings"
-msgstr ""
+msgstr "Paramètres des notifications"
 
