@@ -11,7 +11,7 @@
     <div metal:fill-slot="main"
 	 tal:define="context_url string:${context/absolute_url};">
       <h1 i18n:translate="">Notifications</h1>
-      <a href="@@collective_whathappened_manage" i18n:translate="">Manage my subscriptions</a>
+      <a href="@@collective_whathappened_manage" i18n:translate="">Manage my notifications</a>
       | <a href="@@collective_whathappened_set_all_seen" i18n:translate="">Set all notifications to seen</a>
       <p i18n:translate="">
 	<strong i18n:name="count" tal:content="view/notificationsCount"></strong> notifications

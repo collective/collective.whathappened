@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: collective.whathappened\n"
-"POT-Creation-Date: 2013-11-06 14:22+0000\n"
+"POT-Creation-Date: 2013-11-08 15:11+0000\n"
 "PO-Revision-Date: 2008-02-04 18:00+0000\n"
 "Last-Translator: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
 "Language-Team: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
@@ -20,7 +20,7 @@ msgid "${count} notifications"
 msgstr ""
 
 #: ./vocabularies.py:18
-msgid "${title} (blacklisted)"
+msgid "${title} (blocked)"
 msgstr ""
 
 #: ./utility.py:37
@@ -40,11 +40,11 @@ msgid "An action which can add or remove the subscription to an object"
 msgstr ""
 
 #: ./profiles/default/actions.xml
-msgid "Blacklist this page"
+msgid "Block notifications"
 msgstr ""
 
 #: ./profiles/default/actions.xml
-msgid "Blacklist this section"
+msgid "Block notifications from this section"
 msgstr ""
 
 #: ./actions/subscription.py:22
@@ -53,6 +53,14 @@ msgstr ""
 
 #: ./actions/subscription.py:32
 msgid "Change the user's subscription to this object."
+msgstr ""
+
+#: ./profiles/default/actions.xml
+msgid "Disable notifications"
+msgstr ""
+
+#: ./profiles/default/actions.xml
+msgid "Disable notifications on this section"
 msgstr ""
 
 #: ./profiles/default/actions.xml
@@ -75,8 +83,19 @@ msgstr ""
 msgid "Edit subscription action"
 msgstr ""
 
-#: ./browser/manage.py:36
+#: ./profiles/default/actions.xml
+msgid "Enable notifications"
+msgstr ""
+
+#: ./profiles/default/actions.xml
+msgid "Enable notifications on this section"
+msgstr ""
+
 #: ./browser/templates/notifications_all_view.pt:14
+msgid "Manage my notifications"
+msgstr ""
+
+#: ./browser/manage.py:36
 msgid "Manage my subscriptions"
 msgstr ""
 
@@ -109,7 +128,15 @@ msgid "Set all notifications to seen"
 msgstr ""
 
 #: ./profiles/default/actions.xml
-msgid "Stop not receive notifications about contents from this section"
+msgid "Stop blocking notifications"
+msgstr ""
+
+#: ./profiles/default/actions.xml
+msgid "Stop blocking notifications from this section"
+msgstr ""
+
+#: ./profiles/default/actions.xml
+msgid "Stop not receiving notifications about contents from this section"
 msgstr ""
 
 #: ./profiles/default/actions.xml
@@ -120,32 +147,8 @@ msgstr ""
 msgid "Subscribe"
 msgstr ""
 
-#: ./profiles/default/actions.xml
-msgid "Subscribe to this page"
-msgstr ""
-
-#: ./profiles/default/actions.xml
-msgid "Subscribe to this section"
-msgstr ""
-
-#: ./profiles/default/actions.xml
-msgid "Unblacklist this page"
-msgstr ""
-
-#: ./profiles/default/actions.xml
-msgid "Unblacklist this section"
-msgstr ""
-
 #: ./actions/vocabularies.py:7
 msgid "Unsubscribe"
-msgstr ""
-
-#: ./profiles/default/actions.xml
-msgid "Unsubscribe from this page"
-msgstr ""
-
-#: ./profiles/default/actions.xml
-msgid "Unsubscribe from this section"
 msgstr ""
 
 #: ./settings.py:10

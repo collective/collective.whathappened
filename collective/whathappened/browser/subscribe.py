@@ -39,8 +39,8 @@ class ISubscribe(interface.Interface):
 
 
 class Subscribe(BrowserView):
-    msgid_add = u"You have subscribed to ${path}."
-    msgid_err = u"Error while subscribing to ${path}"
+    msgid_add = u"You have enabled notifications from ${path}."
+    msgid_err = u"Error while enabling notifications from ${path}"
     action = True
     interface.implements(ISubscribe)
 
@@ -227,18 +227,19 @@ class Subscribe(BrowserView):
 
 
 class Unsubscribe(Subscribe):
-    msgid_add = u"You have unsubscribed from ${path}"
-    msgid_err = u"Error while unsubscribing from ${path}"
+    msgid_add = u"You have disabled notifications from ${path}"
+    msgid_err = u"Error while disabling notifications from ${path}"
     action = None
 
 
 class Blacklist(Subscribe):
-    msgid_add = u"You have blacklisted ${path}"
-    msgid_err = u"Error while unblacklisting ${path}"
+    msgid_add = u"You have blocked notifications from ${path}"
+    msgid_err = u"Error while blocking notifications from ${path}"
     action = False
 
 
 class Unblacklist(Subscribe):
-    msgid_add = u"You have unblacklisted ${path}"
-    msgid_err = u"Error while unblacklisting ${path}"
+    msgid_add = u"You have stopped blocking notifications from ${path}"
+    msgid_err = (u"Error while stopping the blockage of notifications "
+                 u"from ${path}")
     action = None

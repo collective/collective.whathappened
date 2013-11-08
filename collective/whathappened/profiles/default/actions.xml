@@ -3,7 +3,7 @@
    xmlns:i18n="http://xml.zope.org/namespaces/i18n">
  <object name="document_actions" meta_type="CMF Action Category">
   <object name="collective_whathappened_subscribe" meta_type="CMF Action" i18n:domain="collective.whathappened">
-   <property name="title" i18n:translate="">Subscribe to this page</property>
+   <property name="title" i18n:translate="">Enable notifications</property>
    <property name="description" i18n:translate="">Receive notifications about this content</property>
    <property name="url_expr">string:$object_url/@@collective_whathappened_subscribe_subscribe</property>
    <property name="icon_expr"></property>
@@ -14,7 +14,7 @@
    <property name="visible">True</property>
   </object>
   <object name="collective_whathappened_unsubscribe" meta_type="CMF Action" i18n:domain="collective.whathappened">
-   <property name="title" i18n:translate="">Unsubscribe from this page</property>
+   <property name="title" i18n:translate="">Disable notifications</property>
    <property name="description" i18n:translate="">Do not receive notifications from this content anymore</property>
    <property name="url_expr">string:$object_url/@@collective_whathappened_subscribe_unsubscribe</property>
    <property name="icon_expr"></property>
@@ -26,7 +26,7 @@
   </object>
 
   <object name="collective_whathappened_canonical_subscribe" meta_type="CMF Action" i18n:domain="collective.whathappened">
-    <property name="title" i18n:translate="">Subscribe to this section</property>
+    <property name="title" i18n:translate="">Enable notifications on this section</property>
     <property name="description" i18n:translate="">Receive notifications about content from this section</property>
     <property name="url_expr">string:${plone_context_state/canonical_object_url}/@@collective_whathappened_subscribe_subscribe</property>
     <property name="icon_expr"></property>
@@ -37,7 +37,7 @@
     <property name="visible">True</property>
   </object>
   <object name="collective_whathappened_canonical_unsubscribe" meta_type="CMF Action" i18n:domain="collective.whathappened">
-    <property name="title" i18n:translate="">Unsubscribe from this section</property>
+    <property name="title" i18n:translate="">Disable notifications on this section</property>
     <property name="description" i18n:translate="">Do not receive notifications from this section</property>
     <property name="url_expr">string:${plone_context_state/canonical_object_url}/@@collective_whathappened_subscribe_unsubscribe</property>
     <property name="icon_expr"></property>
@@ -49,7 +49,7 @@
   </object>
 
   <object name="collective_whathappened_blacklist" meta_type="CMF Action" i18n:domain="collective.whathappened">
-    <property name="title" i18n:translate="">Blacklist this page</property>
+    <property name="title" i18n:translate="">Block notifications</property>
     <property name="description" i18n:translate="">Do not receive notifications about this content</property>
     <property name="url_expr">string:$object_url/@@collective_whathappened_subscribe_blacklist</property>
     <property name="icon_expr"></property>
@@ -60,7 +60,7 @@
     <property name="visible">True</property>
   </object>
   <object name="collective_whathappened_unblacklist" meta_type="CMF Action" i18n:domain="collective.whathappened">
-    <property name="title" i18n:translate="">Unblacklist this page</property>
+    <property name="title" i18n:translate="">Stop blocking notifications</property>
     <property name="description" i18n:translate="">Stop not receiving notifications about this content</property>
     <property name="url_expr">string:$object_url/@@collective_whathappened_subscribe_unblacklist</property>
     <property name="icon_expr"></property>
@@ -71,8 +71,8 @@
     <property name="visible">True</property>
   </object>
 
-  <object name="collective_whathappened_canonical_blacklist" meta_type="CMF Action" i18n:domain="collective.whathappened">
-    <property name="title" i18n:translate="">Blacklist this section</property>
+  <object name="collective_whathappened_canonical_blacklist" metxa_type="CMF Action" i18n:domain="collective.whathappened">
+    <property name="title" i18n:translate="">Block notifications from this section</property>
     <property name="description" i18n:translate="">Do not receive notifications about contents from this section</property>
     <property name="url_expr">string:${plone_context_state/canonical_object_url}/@@collective_whathappened_subscribe_blacklist</property>
     <property name="icon_expr"></property>
@@ -83,8 +83,8 @@
     <property name="visible">True</property>
   </object>
   <object name="collective_whathappened_canonical_unblacklist" meta_type="CMF Action" i18n:domain="collective.whathappened">
-    <property name="title" i18n:translate="">Unblacklist this section</property>
-    <property name="description" i18n:translate="">Stop not receive notifications about contents from this section</property>
+    <property name="title" i18n:translate="">Stop blocking notifications from this section</property>
+    <property name="description" i18n:translate="">Stop not receiving notifications about contents from this section</property>
     <property name="url_expr">string:${plone_context_state/canonical_object_url}/@@collective_whathappened_subscribe_unblacklist</property>
     <property name="icon_expr"></property>
     <property name="available_expr">python: plone_context_state.canonical_object().restrictedTraverse('@@collective_whathappened_subscribe_unblacklist').can_canonical_unblacklist()</property>

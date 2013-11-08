@@ -20,4 +20,13 @@
         handler=".upgrades.upgrade_db"
         />
 
+    <upgradeStep
+        source="1006"
+        destination="1007"
+        title="Upgrade"
+        description=""
+        profile="collective.whathappened:default"
+        handler=".upgrades.common"
+        />
+
 </configure>
