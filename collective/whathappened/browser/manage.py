@@ -33,7 +33,6 @@ class ManageFormAdapter(object):
 class ManageForm(AutoExtensibleForm, form.Form):
     schema = ManageFormSchema
     enableCSRFProtection = True
-    label = _("Manage my subscriptions")
 
     def updateWidgets(self):
         super(ManageForm, self).updateWidgets()
@@ -58,4 +57,4 @@ class ManageForm(AutoExtensibleForm, form.Form):
 
 class ManageFormWrapper(FormWrapper):
     form = ManageForm
-    label = _("Manage my subscriptions")
+    label = _("Manage my notifications")
