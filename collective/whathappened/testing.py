@@ -13,7 +13,9 @@ class Layer(PloneSandboxLayer):
     def setUpZope(self, app, configurationContext):
 
         import collective.whathappened
+        import collective.history
         self.loadZCML(package=collective.whathappened)
+        self.loadZCML(package=collective.history)
 
     def setUpPloneSite(self, portal):
         portal.portal_workflow.setDefaultChain('simple_publication_workflow')
