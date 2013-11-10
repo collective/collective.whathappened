@@ -71,7 +71,7 @@
     <property name="visible">True</property>
   </object>
 
-  <object name="collective_whathappened_canonical_blacklist" metxa_type="CMF Action" i18n:domain="collective.whathappened">
+  <object name="collective_whathappened_canonical_blacklist" meta_type="CMF Action" i18n:domain="collective.whathappened">
     <property name="title" i18n:translate="">Block notifications from this section</property>
     <property name="description" i18n:translate="">Do not receive notifications about contents from this section</property>
     <property name="url_expr">string:${plone_context_state/canonical_object_url}/@@collective_whathappened_subscribe_blacklist</property>
