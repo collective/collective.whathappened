@@ -34,7 +34,7 @@
           </li>
           <li id="personaltools-all-notifications"
               i18n:domain="collective.whathappened">
-            <a tal:attributes="href string:${view/navigation_root}/@@collective_whathappened_notifications_all"
+            <a tal:attributes="href string:${view/navigation_root_url}/@@collective_whathappened_notifications_all"
                i18n:translate="">See all notifications</a>
          </li>
       </ul>
