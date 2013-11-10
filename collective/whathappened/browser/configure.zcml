@@ -3,6 +3,7 @@
     xmlns:browser="http://namespaces.zope.org/browser"
     i18n_domain="collective.whathappened">
 
+  <include package="Products.CMFCore" file="permissions.zcml" />
   <browser:page
       name="collective_whathappened_notifications_all"
       for="*"
@@ -82,23 +83,6 @@
       class=".redirect.RedirectView"
       layer="collective.whathappened.layer.Layer"
       />
-
-  <!-- EXAMPLE:
-  <browser:viewlet
-      name="collective.someviewlet"
-      manager="plone.app.layout.viewlets.interfaces.IPortalFooter"
-      class=".viewlets.MyViewlet"
-      layer="collective.whathappened.layer.ILayer"
-      permission="zope2.View"
-      />
-  <browser:page
-      for="*"
-      name="myview"
-      class=".myfile.MyView"
-      layer="collective.whathappened.layer.ILayer"
-      permission="zope2.View"
-      />
-  -->
 
   <browser:page
       name="whathappened-settings"
