@@ -127,7 +127,7 @@ msgstr "Voir toutes les notifications"
 
 #: ./browser/templates/notifications_all_view.pt:15
 msgid "Set all notifications to seen"
-msgstr "Marquer toutes les notifications comme lues"
+msgstr "Tout marquer comme lu"
 
 #: ./profiles/default/actions.xml
 msgid "Stop blocking notifications"
