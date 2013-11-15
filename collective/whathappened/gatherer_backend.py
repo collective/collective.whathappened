@@ -98,6 +98,8 @@ class UserActionGathererBackend(BrowserView):
                 continue
             except KeyError:
                 continue
+            except AttributeError:
+                continue
             useraction = self.manager.get(brain.id)
             if useraction.who == self.user:
                 continue
