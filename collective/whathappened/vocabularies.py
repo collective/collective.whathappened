@@ -7,7 +7,9 @@ from AccessControl.unauthorized import Unauthorized
 
 def _getTitle(context, subscription):
     try:
-        content = context.restrictedTraverse(subscription.where.encode('utf-8'))
+        content = context.restrictedTraverse(
+            subscription.where.encode('utf-8')
+            )
     except Unauthorized:
         return
     except KeyError:

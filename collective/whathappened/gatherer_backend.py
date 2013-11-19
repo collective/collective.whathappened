@@ -30,7 +30,8 @@ class IGathererBackend(interface.Interface):
         """Get the unique id of the gatherer"""
 
     def setUser(user):
-        """Set the user the gatherer is working for (default is the authenticated one)"""
+        """Set the user the gatherer is working for
+        (default is the authenticated one)"""
 
 
 class UserActionGathererBackend(BrowserView):
@@ -77,7 +78,6 @@ class UserActionGathererBackend(BrowserView):
         return subscription
 
     def getNewNotifications(self, lastCheck):
-        what_whitelist = self.settings.useraction_gatherer_whitelist
         brains = self.manager.search(when={
             'query': DateTime(lastCheck),
             'range': 'min'
@@ -86,19 +86,7 @@ class UserActionGathererBackend(BrowserView):
         self.storage.initialize()
         for brain in brains:
             subscription = self._getSubscriptionInTree(brain.where_path)
-            if subscription is None or not subscription.wants:
-                continue
-            if brain.when < lastCheck:
-                continue
-            if brain.what not in what_whitelist:
-                continue
-            try:
-                self.context.restrictedTraverse(brain.where_path)
-            except Unauthorized:
-                continue
-            except KeyError:
-                continue
-            except AttributeError:
+            if not self._useractionIsCorrect(subscription, brain, lastCheck):
                 continue
             useraction = self.manager.get(brain.id)
             if useraction.who == self.user:
@@ -107,6 +95,24 @@ class UserActionGathererBackend(BrowserView):
             notifications.append(notification)
         self.storage.terminate()
         return notifications
+
+    def _useractionIsCorrect(self, subscription, brain, lastCheck):
+        what_whitelist = self.settings.useraction_gatherer_whitelist
+        if subscription is None or not subscription.wants:
+            return False
+        if brain.when < lastCheck:
+            return False
+        if brain.what not in what_whitelist:
+            return False
+        try:
+            self.context.restrictedTraverse(brain.where_path)
+        except Unauthorized:
+            return False
+        except KeyError:
+            return False
+        except AttributeError:
+            return False
+        return True
 
     def getId(self):
         return self.id

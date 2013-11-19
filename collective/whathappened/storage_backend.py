@@ -91,7 +91,8 @@ class SqliteStorageBackend(object):
         self.request = request
         self.mtool = getToolByName(self.context, 'portal_membership')
         self.user = self.mtool.getAuthenticatedMember().getId()
-        self.directory = os.environ.get('collective_whathappened_sqlite_directory', None)
+        self.directory = os.environ.get(
+            'collective_whathappened_sqlite_directory', None)
         self.db_path = None
         self.db = None
 
@@ -173,7 +174,8 @@ class SqliteStorageBackend(object):
             try:
                 self.db.execute(
                     """
-                    INSERT INTO notifications_who (`what`, `when`, `where`, `who`)
+                    INSERT INTO notifications_who (`what`, `when`,
+                                                   `where`, `who`)
                     VALUES (?, ?, ?, ?)
                     """,
                     [
@@ -189,7 +191,8 @@ class SqliteStorageBackend(object):
     def _createNotification(self, notification):
         self.db.execute(
             """
-                INSERT INTO notifications (`what`, `when`, `where`, `seen`, `gatherer`, `info`)
+                INSERT INTO notifications (`what`, `when`, `where`,
+                                           `seen`, `gatherer`, `info`)
                 VALUES (?, ?, ?, ?, ?, ?)
             """,
             [notification.what,
@@ -202,7 +205,8 @@ class SqliteStorageBackend(object):
         for who in notification.who:
             self.db.execute(
                 """
-                    INSERT INTO notifications_who (`what`, `when`, `where`, `who`)
+                    INSERT INTO notifications_who (`what`, `when`,
+                                                   `where`, `who`)
                     VALUES (?, ?, ?, ?)
                 """,
                 [notification.what,
@@ -324,18 +328,21 @@ class SqliteStorageBackend(object):
     def clean(self):
         lastWeek = datetime.datetime.now() - datetime.timedelta(7)
         timestamp = time.mktime(lastWeek.timetuple())
-        self.db.execute("REMOVE FROM notifications WHERE `when` < ?", [timestamp])
+        self.db.execute("REMOVE FROM notifications WHERE `when` < ?",
+                        [timestamp])
 
     def getUnseenCount(self):
         if self.db is None:
             return 0
-        query = self.db.execute("SELECT COUNT(*) FROM notifications WHERE `seen` = 0")
+        query = self.db.execute("SELECT COUNT(*) FROM notifications "
+                                "WHERE `seen` = 0")
         unseen = query.fetchone()['COUNT(*)']
         return unseen
 
     def getLastNotificationTime(self):
         try:
-            req = "SELECT `when` FROM notifications ORDER BY `when` DESC LIMIT 1"
+            req = ("SELECT `when` FROM notifications "
+                   "ORDER BY `when` DESC LIMIT 1")
             result = self.db.execute(req).fetchone()
             lastTime = datetime.datetime.fromtimestamp(result['when'])
         except:
@@ -348,10 +355,12 @@ class SqliteStorageBackend(object):
                 self.db.execute("DELETE FROM subscriptions WHERE `where` = ?",
                                 [subscription.where])
             else:
-                self.db.execute("INSERT INTO subscriptions (`where`, `wants`) VALUES (?, ?)",
+                self.db.execute("INSERT INTO subscriptions "
+                                "(`where`, `wants`) VALUES (?, ?)",
                                 [subscription.where, subscription.wants])
         except sqlite3.IntegrityError:
-            self.db.execute("UPDATE subscriptions SET `wants` = ? WHERE `where` = ?",
+            self.db.execute("UPDATE subscriptions SET `wants` = ? "
+                            "WHERE `where` = ?",
                             [subscription.wants, subscription.where])
         if subscription is None or not subscription.wants:
             self.db.execute("DELETE FROM notifications WHERE `where` LIKE ?",
@@ -369,7 +378,8 @@ class SqliteStorageBackend(object):
         return subscription
 
     def getSubscription(self, where):
-        results = self.db.execute("SELECT * FROM subscriptions WHERE `where` = ?",
+        results = self.db.execute("SELECT * FROM subscriptions "
+                                  "WHERE `where` = ?",
                                   [where]).fetchall()
         if len(results) == 0:
             return None

@@ -48,7 +48,8 @@ class GathererManager(object):
 
     def __getattribute__(self, name):
         """Automatically call self.update() when other methods are called"""
-        if name not in ['update', 'registry', 'backends', 'context', 'request']:
+        if name not in ['update', 'registry', 'backends',
+                        'context', 'request']:
             self.update()
         return object.__getattribute__(self, name)
 
