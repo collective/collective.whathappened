@@ -4,6 +4,7 @@ from plone.app.testing import IntegrationTesting, FunctionalTesting
 from plone.app.robotframework.testing import AUTOLOGIN_LIBRARY_FIXTURE
 
 from plone.testing import z2
+from Testing.ZopeTestCase.utils import setupCoreSessions
 
 
 class Layer(PloneSandboxLayer):
@@ -16,6 +17,7 @@ class Layer(PloneSandboxLayer):
         import collective.history
         self.loadZCML(package=collective.whathappened)
         self.loadZCML(package=collective.history)
+        setupCoreSessions(app)
 
     def setUpPloneSite(self, portal):
         portal.portal_workflow.setDefaultChain('simple_publication_workflow')
