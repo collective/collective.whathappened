@@ -21,6 +21,18 @@ Defaut storage backend use "collective_whathappened_sqlite_directory" variable t
 How to install
 ==============
 
+.. image:: https://pypip.in/v/collective.whathappened/badge.png
+    :target: https://crate.io/packages/collective.whathappened/
+
+.. image:: https://pypip.in/d/collective.whathappened/badge.png
+    :target: https://crate.io/packages/collective.whathappened/
+
+.. image:: https://secure.travis-ci.org/collective/collective.whathappened.png
+    :target: http://travis-ci.org/#!/collective/collective.whathappened
+
+.. image:: https://coveralls.io/repos/collective/collective.whathappened/badge.png?branch=master
+    :target: https://coveralls.io/r/collective/collective.whathappened
+
 This addon can be installed has any other addons. please follow official
 documentation_
 
