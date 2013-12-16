@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-11-08 15:11+0000\n"
+"POT-Creation-Date: 2013-12-16 09:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,7 @@ msgstr ""
 msgid "${count} notifications"
 msgstr ""
 
-#: ./vocabularies.py:18
+#: ./vocabularies.py:20
 msgid "${title} (blocked)"
 msgstr ""
 
@@ -97,7 +97,7 @@ msgstr ""
 msgid "Manage my notifications"
 msgstr ""
 
-#: ./browser/manage.py:36
+#: ./browser/manage.py:60
 msgid "Manage my subscriptions"
 msgstr ""
 
@@ -117,7 +117,7 @@ msgstr ""
 msgid "Receive notifications about this content"
 msgstr ""
 
-#: ./browser/manage.py:43
+#: ./browser/manage.py:42
 msgid "Save"
 msgstr ""
 
@@ -147,6 +147,10 @@ msgstr ""
 
 #: ./actions/vocabularies.py:6
 msgid "Subscribe"
+msgstr ""
+
+#: ./browser/manage.py:18
+msgid "Subscriptions"
 msgstr ""
 
 #: ./actions/vocabularies.py:7

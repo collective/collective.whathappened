@@ -15,7 +15,7 @@ from collective.whathappened.storage_manager import StorageManager
 class ManageFormSchema(interface.Interface):
     directives.widget('subscriptions', CheckBoxFieldWidget)
     subscriptions = schema.List(
-        title=u"Subscriptions",
+        title=_(u"Subscriptions"),
         value_type=schema.Choice(
             vocabulary="collective.whathappened.vocabularies.subscriptions"
         )
@@ -57,4 +57,4 @@ class ManageForm(AutoExtensibleForm, form.Form):
 
 class ManageFormWrapper(FormWrapper):
     form = ManageForm
-    label = _("Manage my notifications")
+    label = _("Manage my subscriptions")
