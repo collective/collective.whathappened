@@ -57,6 +57,9 @@ class IStorageBackend(interface.Interface):
     def getAllNotifications():
         """Get all notifications."""
 
+    def getUnseenNotifications():
+        """Get all unseen notifications."""
+
     def setSeen(path):
         """Set seen to true for the given path,
         or all notifications if no path is given."""
@@ -316,6 +319,34 @@ class SqliteStorageBackend(object):
             notifications.append(self._createNotificationFromResult(result))
         return notifications
 
+    def getUnseenNotifications(self):
+        if self.db is None:
+            return []
+        results = self.db.execute(
+            """
+            SELECT
+                n.`what`,
+                n.`when`,
+                n.`where`,
+                GROUP_CONCAT(nw.`who`, ', ') as `who`,
+                n.`gatherer`,
+                n.`seen`,
+                n.`info`
+            FROM notifications n
+            INNER JOIN notifications_who nw
+                ON n.`what` = nw.`what`
+                AND n.`when` = nw.`when`
+                AND n.`where` = nw.`where`
+            WHERE n.`seen` = 0
+            GROUP BY n.`what`, n.`when`, n.`where`
+            ORDER BY n.`when` DESC
+            """
+        ).fetchall()
+        notifications = []
+        for result in results:
+            notifications.append(self._createNotificationFromResult(result))
+        return notifications
+
     def setSeen(self, path=None):
         if path is None:
             self.db.execute("UPDATE notifications SET seen = 1")
@@ -430,6 +461,9 @@ class NullBackend(object):
         return []
 
     def getAllNotifications(self):
+        return []
+
+    def getUnseenNotifications(self):
         return []
 
     def setSeen(self, path=None):

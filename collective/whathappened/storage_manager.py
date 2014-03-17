@@ -76,6 +76,9 @@ class StorageManager(object):
     def getAllNotifications(self):
         return self.backend.getAllNotifications()
 
+    def getUnseenNotifications(self):
+        return self.backend.getUnseenNotifications()
+
     def setSeen(self, path=None):
         return self.backend.setSeen(path)
 
