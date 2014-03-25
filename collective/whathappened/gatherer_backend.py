@@ -119,3 +119,4 @@ class UserActionGathererBackend(BrowserView):
 
     def setUser(self, user):
         self.user = user
+        self.storage.setUser(user)
