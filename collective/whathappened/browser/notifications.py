@@ -44,6 +44,9 @@ class AllView(BrowserView):
         return self.index()
 
     def update(self):
+        mtool = getToolByName(self.context, 'portal_membership')
+        if mtool.getAuthenticatedMember().getId() is None:
+            raise Unauthorized
         self.gatherer = GathererManager(self.context, self.request)
         self.storage = StorageManager(self.context, self.request)
         self.storage.initialize()
