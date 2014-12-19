@@ -52,8 +52,17 @@ class AllView(BrowserView):
         self.storage.initialize()
         self.updateNotifications()
         self.notifications = self.storage.getAllNotifications()
+        self._validate_notifications()
         self.storage.terminate()
         self.notificationsCount = len(self.notifications)
+
+    def _validate_notifications(self):
+        for notification in self.notifications:
+            try:
+                validateNotification(self.context, notification)
+            except NotificationValueError:
+                self.storage.removeNotification(notification)
+                self.notifications.remove(notification)
 
     def show(self, notification):
         return show(self.context, self.request, notification)
